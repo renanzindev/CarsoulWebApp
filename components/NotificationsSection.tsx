@@ -47,10 +47,12 @@ export const getNotificationsStyles = () => {
   return `
     /* Notifications */
     .notifications {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
         border-radius: 12px;
         padding: 20px;
         margin: 20px 0;
+        color: #333333;
     }
     
     .notifications h3 {

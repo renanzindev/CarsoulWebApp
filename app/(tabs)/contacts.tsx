@@ -4,13 +4,10 @@ import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
 import { DashboardHeader, getHeaderStyles, getHeaderScript } from '@/components/DashboardHeader';
 import { ProfileCard, getProfileCardStyles } from '@/components/ProfileCard';
-import { QuickAccessCards, getQuickAccessStyles, getQuickAccessScript } from '@/components/QuickAccessCards';
-import { PerformanceSection, getPerformanceStyles, getPerformanceScript } from '@/components/PerformanceSection';
-import { NotificationsSection, getNotificationsStyles } from '@/components/NotificationsSection';
-import { QuickActionsSection, getQuickActionsStyles } from '@/components/QuickActionsSection';
+import { ContactsSection, getContactsStyles } from '@/components/ContactsSection';
 import { getIconStyles, getBaseStyles, getResponsiveStyles } from '@/components/DashboardStyles';
 
-export default function DashboardScreen() {
+export default function ContactsScreen() {
   // Função para lidar com mensagens do WebView
   const handleWebViewMessage = (event: any) => {
     try {
@@ -32,24 +29,35 @@ export default function DashboardScreen() {
     }
   };
 
-  // Dashboard CarSoul - Layout componentizado
+  // Tela de Contatos Úteis - Mantém padrão visual do dashboard
   const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>CarSoul Dashboard</title>
+        <title>CarSoul - Contatos Úteis</title>
         <style>
             ${getBaseStyles()}
             ${getHeaderStyles()}
             ${getProfileCardStyles()}
-            ${getQuickAccessStyles()}
-            ${getPerformanceStyles()}
-            ${getNotificationsStyles()}
-            ${getQuickActionsStyles()}
+            ${getContactsStyles()}
             ${getIconStyles()}
             ${getResponsiveStyles()}
+            
+            /* Estilos específicos para a tela de contatos */
+            body {
+                background: #FFFFFF;
+                min-height: 100vh;
+            }
+            
+            .container {
+                background: transparent;
+            }
+            
+            .profile-card {
+                margin-bottom: 16px;
+            }
             
             @media (max-width: 768px) {
                 .nav-links {
@@ -68,8 +76,6 @@ export default function DashboardScreen() {
         </style>
         <script>
             ${getHeaderScript()}
-            ${getQuickAccessScript()}
-            ${getPerformanceScript()}
         </script>
      </head>
     <body>
@@ -78,13 +84,7 @@ export default function DashboardScreen() {
             
             ${ProfileCard({})}
             
-            ${QuickAccessCards({})}
-            
-            ${PerformanceSection({})}
-            
-            ${NotificationsSection({})}
-            
-            ${QuickActionsSection({})}
+            ${ContactsSection({})}
         </div>
     </body>
     </html>

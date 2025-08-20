@@ -16,11 +16,6 @@ export const QuickActionsSection: React.FC<QuickActionsSectionProps> = ({
       id: 'close-os',
       icon: '✅',
       title: 'Fechar OS'
-    },
-    {
-      id: 'contacts',
-      icon: '📞',
-      title: 'Contatos Úteis'
     }
   ]
 }) => {

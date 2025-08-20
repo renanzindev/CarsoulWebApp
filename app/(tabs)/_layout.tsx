@@ -25,6 +25,12 @@ export default function TabLayout() {
           title: 'Dashboard',
         }}
       />
+      <Tabs.Screen
+        name="contacts"
+        options={{
+          title: 'Contatos',
+        }}
+      />
     </Tabs>
   );
 }

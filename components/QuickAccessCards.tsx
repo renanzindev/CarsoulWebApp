@@ -24,6 +24,13 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
       notificationCount: 5
     },
     {
+      id: 'contacts',
+      title: 'Contatos Úteis',
+      subtitle: 'Acessar',
+      icon: '📞',
+      iconClass: 'icon-contacts'
+    },
+    {
       id: 'profile',
       title: 'Perfil',
       subtitle: 'Acessar',
@@ -38,23 +45,16 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
       icon: '📊',
       iconClass: 'icon-reports',
       notificationCount: 1
-    },
-    {
-      id: 'more',
-      title: 'Mais',
-      subtitle: 'Opções',
-      icon: '⚙️',
-      iconClass: 'icon-more'
     }
   ]
 }) => {
   return (
     `
-    <!-- Quick Access Cards -->
+    <!-- Quick Access Cards Carousel -->
     <div class="quick-access">
-        <div class="cards-grid">
+        <div class="cards-carousel">
             ${cards.map(card => `
-                <div class="access-card">
+                <div class="access-card" onclick="navigateToCard('${card.id}')">
                     ${card.notificationCount ? `<div class="notification-badge">${card.notificationCount}</div>` : ''}
                     <div class="icon ${card.iconClass}">${card.icon}</div>
                     <h4>${card.title}</h4>
@@ -65,6 +65,40 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
     </div>
     `
   );
+};
+
+export const getQuickAccessScript = () => {
+  return `
+    function navigateToCard(cardId) {
+      switch(cardId) {
+        case 'contacts':
+          // Navegar para a tela de contatos
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              type: 'navigate',
+              route: '/contacts'
+            }));
+          } else {
+            // Fallback para web
+            window.location.href = '/contacts';
+          }
+          break;
+        case 'pcp':
+          console.log('Navegando para PCP');
+          break;
+        case 'profile':
+          console.log('Navegando para Perfil');
+          break;
+        case 'reports':
+          console.log('Navegando para Relatórios');
+          break;
+        default:
+          console.log('Card não implementado:', cardId);
+      }
+    }
+
+
+  `;
 };
 
 export const getQuickAccessStyles = () => {
@@ -79,21 +113,33 @@ export const getQuickAccessStyles = () => {
         font-size: 18px;
     }
     
-    .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    .cards-carousel {
+        display: flex;
         gap: 15px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 10px 0;
         margin-bottom: 20px;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    
+    .cards-carousel::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
     }
     
     .access-card {
-        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
         border-radius: 12px;
-        padding: 20px;
+        padding: 15px;
         text-align: center;
         cursor: pointer;
         transition: transform 0.2s;
         position: relative;
+        color: #333333;
+        min-width: 140px;
+        flex-shrink: 0;
     }
     
     .access-card:hover {
@@ -119,7 +165,7 @@ export const getQuickAccessStyles = () => {
     
     .access-card p {
         font-size: 12px;
-        color: #FFFFFF;
+        color: #6c757d;
     }
     
     .notification-badge {

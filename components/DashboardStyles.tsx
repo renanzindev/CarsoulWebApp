@@ -23,7 +23,7 @@ export const getIconStyles = () => {
     .icon-return {
         font-size: 32px;
         margin-bottom: 10px;
-        color: #FFFFFF;
+        color: #80808F;
     }
     
     .icon-logistics {
@@ -43,11 +43,14 @@ export const getIconStyles = () => {
     
     .icon-pcp {
         font-size: 24px;
-        color: #FFFFFF;
+        color: #1E1E2D;
     }
     
     .icon-profile {
         font-size: 24px;
+        background-color: #A6CE38;
+        padding: 8px;
+        border-radius: 50%;
         color: #AB47BC;
     }
     
@@ -68,7 +71,7 @@ export const getIconStyles = () => {
     
     .icon-success {
         font-size: 20px;
-        color: #4CAF50;
+        color: #FFFFFF;
     }
     
     .icon-warning {
@@ -93,8 +96,8 @@ export const getBaseStyles = () => {
     
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #ffffff 100%, #ffffff 100%);
-        color: #FFFFFF;
+        background: #FFFFFF;
+        color: #333333;
         min-height: 100vh;
         overflow-x: hidden;
     }
@@ -120,7 +123,6 @@ export const getResponsiveStyles = () => {
         
         .productivity-visual {
             flex-direction: column;
-            gap: 15px;
         }
         
         .chart-area {

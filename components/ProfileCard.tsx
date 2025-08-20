@@ -47,11 +47,10 @@ export const getProfileCardStyles = () => {
   return `
     /* Profile Card */
     .profile-card {
-        background: linear-gradient(135deg, #181C32 0%, #181C32 100%);
-        border-radius: 8px;
-        padding: 15px;
+        background: #181C32;
+        border-radius: 12px;
+        padding: 10px;
         margin: 20px 0;
-        box-shadow: 0 8px 32px rgb(0, 0, 0);
     }
     
     .profile-info {
@@ -61,31 +60,29 @@ export const getProfileCardStyles = () => {
     }
     
     .profile-avatar {
-        width: 60px;
-        height: 60px;
+        width: 32px;
+        height: 32px;
         background: linear-gradient(135deg, #00d4ff, #0099cc);
-        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin-right: 15px;
+        margin-right: 12px;
     }
     
     .profile-details h3 {
-        font-size: 18px;
+        color: #ffffff;
+        font-size: 12px;
         margin-bottom: 5px;
     }
     
     .profile-details p {
-        color: #a0aec0;
-        font-size: 14px;
+        color: #FFFFFF;
+        font-size: 10px;
     }
     
     .medals {
         display: flex;
-        gap: 10px;
+        gap: 5px;
         margin-bottom: 15px;
     }
     
@@ -109,8 +106,8 @@ export const getProfileCardStyles = () => {
     }
     
     .motivation {
-        color: #00d4ff;
-        font-size: 14px;
+        color: #FFFFFF;
+        font-size: 10px;
         font-style: italic;
     }
   `;
