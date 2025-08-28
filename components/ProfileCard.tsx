@@ -1,114 +1,197 @@
 import React from 'react';
+import { Text, View } from 'react-native';
 
-interface ProfileCardProps {
+// Tipos para melhor tipagem
+export interface Medal {
+  emoji: string;
+  active: boolean;
+  title?: string;
+}
+
+export interface ProfileCardProps {
   userName?: string;
   userRole?: string;
   userInitials?: string;
-  medals?: Array<{ emoji: string; active: boolean }>;
+  medals?: Medal[];
   motivationText?: string;
+  variant?: 'default' | 'compact' | 'detailed';
+  showDivider?: boolean;
+  backgroundColor?: string;
+  textColor?: string;
 }
+
+// Dados padrão do componente
+const DEFAULT_MEDALS: Medal[] = [
+  { emoji: "🏆", active: true, title: "Troféu de Excelência" },
+  { emoji: "🥇", active: true, title: "Medalha de Ouro" },
+  { emoji: "🥈", active: false, title: "Medalha de Prata" }
+];
 
 export const ProfileCard: React.FC<ProfileCardProps> = ({
   userName = "Renan Oliveira",
   userRole = "Desenvolvedor",
   userInitials = "RO",
-  medals = [
-    { emoji: "🏆", active: true },
-    { emoji: "🥇", active: true },
-    { emoji: "🥈", active: false }
-  ],
-  motivationText = "Descubra o que falta para você atingir o próximo nível"
+  medals = DEFAULT_MEDALS,
+  motivationText = "Descubra o que falta para você atingir o próximo nível",
+  variant = 'default',
+  showDivider = true,
+  backgroundColor = 'bg-slate-700',
+  textColor = 'text-white'
 }) => {
+  // Função para gerar as iniciais automaticamente
+  const generateInitials = (name: string): string => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const displayInitials = userInitials || generateInitials(userName);
+  
+  // Configurações baseadas na variante
+  const getVariantStyles = () => {
+    switch (variant) {
+      case 'compact':
+        return {
+          container: 'p-1.5 mb-0.5',
+          minHeight: 'min-h-[60px]',
+          spacing: 'pr-2 pl-2'
+        };
+      case 'detailed':
+        return {
+          container: 'p-4 mb-2',
+          minHeight: 'min-h-[100px]',
+          spacing: 'pr-4 pl-4'
+        };
+      default:
+        return {
+          container: 'p-2 mb-1',
+          minHeight: 'min-h-[86px]',
+          spacing: 'pr-3 pl-3'
+        };
+    }
+  };
+
+  const variantStyles = getVariantStyles();
   return (
-    `
-    <!-- Profile Card -->
-    <div class="profile-card">
-        <div class="profile-info">
-            <div class="profile-avatar">${userInitials}</div>
-            <div class="profile-details">
-                <h3>${userName}</h3>
-                <p>${userRole}</p>
-            </div>
-        </div>
-        <div class="medals">
-            ${medals.map(medal => 
-              `<div class="medal ${medal.active ? 'active' : 'inactive'}">${medal.emoji}</div>`
-            ).join('')}
-        </div>
-        <div class="motivation">
-            ${motivationText}
-        </div>
-    </div>
-    `
+    <View className={`${backgroundColor} rounded-xl mx-1 ${variantStyles.container}`}>
+      <View className={`flex-row items-center ${variantStyles.minHeight}`}>
+        {/* Lado Esquerdo - Informações do Usuário */}
+        <View className={`flex-1 ${variantStyles.spacing}`}>
+          <View className="flex-row items-center mb-2">
+            <View className="w-8 h-8 bg-lime-500 rounded justify-center items-center mr-2">
+              <Text className="text-white text-xs font-bold">{displayInitials}</Text>
+            </View>
+            <View className="flex-1">
+              <Text className={`${textColor} text-xs font-bold`}>{userName}</Text>
+              <Text className="text-gray-400 text-[10px]">{userRole}</Text>
+            </View>
+          </View>
+          
+          {/* Medalhas */}
+          {variant !== 'compact' && (
+            <View className="flex-row justify-start mt-1">
+              {medals.map((medal, index) => (
+                <View 
+                  key={index} 
+                  className={`w-7 h-7 rounded-full justify-center items-center mx-0.5 ${
+                    medal.active ? 'bg-lime-500' : 'bg-gray-600'
+                  }`}
+                >
+                  <Text className="text-lg">{medal.emoji}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+        
+        {/* Barra Divisória */}
+        {showDivider && variant !== 'compact' && (
+          <View className="w-px h-16 bg-gray-400 mx-3" />
+        )}
+        
+        {/* Lado Direito - Texto Motivacional */}
+        {variant !== 'compact' && (
+          <View className={`flex-1 ${variantStyles.spacing} justify-center`}>
+            <Text className="text-gray-400 text-[10px] text-left leading-5">
+              {motivationText}
+            </Text>
+          </View>
+        )}
+      </View>
+    </View>
   );
 };
 
-export const getProfileCardStyles = () => {
-  return `
-    /* Profile Card */
-    .profile-card {
-        background: #181C32;
-        border-radius: 12px;
-        padding: 10px;
-        margin: 20px 0;
+// Funções utilitárias para o ProfileCard
+export const ProfileCardUtils = {
+  /**
+   * Gera iniciais a partir de um nome completo
+   */
+  generateInitials: (name: string): string => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  },
+
+  /**
+   * Cria uma medalha com configurações padrão
+   */
+  createMedal: (emoji: string, active: boolean = true, title?: string): Medal => ({
+    emoji,
+    active,
+    title
+  }),
+
+  /**
+   * Configurações de tema pré-definidas
+   */
+  themes: {
+    dark: {
+      backgroundColor: 'bg-slate-700',
+      textColor: 'text-white'
+    },
+    light: {
+      backgroundColor: 'bg-white',
+      textColor: 'text-gray-900'
+    },
+    primary: {
+      backgroundColor: 'bg-blue-600',
+      textColor: 'text-white'
+    },
+    success: {
+      backgroundColor: 'bg-green-600',
+      textColor: 'text-white'
     }
-    
-    .profile-info {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    
-    .profile-avatar {
-        width: 32px;
-        height: 32px;
-        background: linear-gradient(135deg, #00d4ff, #0099cc);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-    }
-    
-    .profile-details h3 {
-        color: #ffffff;
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
-    
-    .profile-details p {
-        color: #FFFFFF;
-        font-size: 10px;
-    }
-    
-    .medals {
-        display: flex;
-        gap: 5px;
-        margin-bottom: 15px;
-    }
-    
-    .medal {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-    }
-    
-    .medal.active {
-        background: linear-gradient(135deg, #ffd700, #ffb347);
-    }
-    
-    .medal.inactive {
-        background: #4a5568;
-        opacity: 0.5;
-    }
-    
-    .motivation {
-        color: #FFFFFF;
-        font-size: 10px;
-        font-style: italic;
-    }
-  `;
+  }
 };
+
+/**
+ * ProfileCard - Componente de cartão de perfil reutilizável
+ * 
+ * @description Componente flexível para exibir informações do usuário com medalhas e texto motivacional
+ * 
+ * @example
+ * ```tsx
+ * // Uso básico
+ * <ProfileCard userName="João Silva" userRole="Desenvolvedor" />
+ * 
+ * // Com variante compacta
+ * <ProfileCard variant="compact" userName="Maria" />
+ * 
+ * // Com tema personalizado
+ * <ProfileCard 
+ *   {...ProfileCardUtils.themes.light}
+ *   userName="Pedro"
+ *   medals={[
+ *     ProfileCardUtils.createMedal("🏆", true, "Campeão"),
+ *     ProfileCardUtils.createMedal("🥇", false, "Ouro")
+ *   ]}
+ * />
+ * ```
+ */

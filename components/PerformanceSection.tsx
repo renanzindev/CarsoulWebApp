@@ -1,6 +1,10 @@
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { CombinedMetricsCard } from './cards/CombinedMetricsCard';
+import { IndividualReturnCard } from './cards/IndividualReturnCard';
+import { ProductivityCard } from './cards/ProductivityCard';
 
-interface MetricCard {
+interface MetricCardData {
   icon: string;
   iconClass: string;
   value: string;
@@ -10,7 +14,8 @@ interface MetricCard {
 interface PerformanceSectionProps {
   productivityPercentage?: number;
   returnPercentage?: number;
-  metrics?: MetricCard[];
+  metrics?: MetricCardData[];
+  onMetricPress?: (label: string) => void;
 }
 
 export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
@@ -35,628 +40,72 @@ export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
       value: '11',
       label: 'Perda de Material'
     }
-  ]
+  ],
+  onMetricPress
 }) => {
+  const handleMetricPress = (label: string) => {
+    if (onMetricPress) {
+      onMetricPress(label);
+    } else {
+      // Navegação padrão baseada no label
+      console.log(`Navegando para: ${label}`);
+      // Aqui você pode adicionar navegação específica para cada card
+      switch(label) {
+        case 'Logística Reversa':
+          console.log('Navegando para página de Logística Reversa');
+          break;
+        case 'Fechamento de OS via app':
+          console.log('Navegando para página de Fechamento de OS');
+          break;
+        case 'Perda de material':
+          console.log('Navegando para página de Perda de Material');
+          break;
+        default:
+          console.log('Card não implementado:', label);
+      }
+    }
+  };
   return (
-    `
-    <!-- Performance Section -->
-    <div class="performance">
-        <h3>Acompanhe aqui sua performance</h3>
+    <View style={styles.performanceContainer}>
+      <Text style={styles.sectionTitle}>Acompanhe aqui sua performance</Text>
+      
+      <View style={styles.topCardsRow}>
+        <View style={styles.productivityContainer}>
+          <ProductivityCard percentage={productivityPercentage} />
+        </View>
         
-        <!-- Top Cards Layout -->
-        <div class="top-cards-layout">
-            <!-- Main Productivity Card (Larger) -->
-            <div class="main-productivity-card">
-                <div class="productivity-header">
-                     <h4>Produtividade</h4>
-                 </div>
-                <div class="productivity-visual">
-                    <div class="chart-container">
-                        <canvas id="productivityChart" width="200" height="100"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Return Card (Smaller) -->
-            <div class="return-metric-card">
-                <div class="return-header">
-                    <div class="return-icon icon-return">📊</div>
-                </div>
-                <div class="return-visual">
-                    <div class="return-content">
-                        <span class="return-number">5%</span>
-                        <span class="return-label">Retorno</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Bottom Metrics Cards (Horizontal) -->
-        <div class="bottom-metrics">
-             ${metrics.map((metric, index) => {
-                 const cardClasses: { [key: number]: string } = {
-                     0: 'metric-card logistics-card',
-                     1: 'metric-card mobile-app-card', 
-                     2: 'metric-card material-loss-card'
-                 };
-                 return `
-                     <div class="${cardClasses[index] || 'metric-card'}">
-                         <div class="icon ${metric.iconClass}">${metric.icon}</div>
-                         <div class="metric-value">${metric.value}</div>
-                         <div class="metric-label">${metric.label}</div>
-                     </div>
-                 `;
-             }).join('')}
-         </div>
-    </div>
-    
-    <!-- Lightbox Taxa de Retorno -->
-    <div id="returnRateLightbox" class="lightbox-overlay" style="display: none;">
-        <div class="lightbox-content">
-            <h2 class="lightbox-title">Taxa de Retorno</h2>
-            <div class="lightbox-body">
-                <div class="lightbox-metric-card">
-                    <div class="lightbox-icon">📊</div>
-                    <div class="lightbox-metric-value">5<span class="lightbox-unit">%</span></div>
-                    <div class="lightbox-metric-label">Retorno</div>
-                </div>
-                <div class="lightbox-messages">
-                    <p class="lightbox-message">O ideal é manter a taxa de retorno abaixo de 4%</p>
-                    <p class="lightbox-message">Quer ajuda para conseguir melhorar esta taxa? Entre em contato com sua Liderança</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    `
+        <View style={styles.returnContainer}>
+          <IndividualReturnCard percentage={returnPercentage} />
+        </View>
+      </View>
+      
+      <CombinedMetricsCard metrics={metrics} onMetricPress={handleMetricPress} />
+    </View>
   );
 };
 
-export const getPerformanceStyles = () => {
-  return `
-/* Performance Section */
-.performance {
-    margin: 30px 0;
-}
-
-.performance h3 {
-    margin-bottom: 20px;
-    font-size: 18px;
-}
-
-.top-cards-layout {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-    align-items: stretch;
-}
-
-.main-productivity-card {
-    width: 200px;
-    height: 120px;
-    background: #FFFFFF;
-    padding: 0 8px;
-    border-radius: 12px;
-    color: #000000;
-    overflow: hidden;
-    border: 1px solid #000000;
-    flex: 1;
-}
-
-.productivity-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0;
-}
-
-.productivity-header h4 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.chart-icon {
-     font-size: 24px;
-     opacity: 0.8;
- }
-
-.productivity-visual {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.chart-container {
-    width: 270px;
-    height: 110px;
-    background: #000000;
-    border-radius: 8px;
-}
-
-.chart-container canvas {
-    width: 100%;
-    height: 100%;
-}
-
-.return-metric-card {
-    width: 85px;
-    height: 102px;
-    background: rgba(128, 128, 143, 1);
-    padding: 12px;
-    border-radius: 12px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.return-metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.return-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.return-header h4 {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.return-visual {
-    display: flex;
-    align-items: left;
-    flex: 1;
-}
-
-.return-icon {
-     font-size: 24px;
-     color: #FFA726;
- }
-
-.return-content {
-    text-align: center;
-    padding: 8px;
-    background: rgba(128, 128, 143, 1);
-    border-radius: 8px;
-}
-
-.return-number {
-    font-size: 22px;
-    font-weight: bold;
-    display: block;
-    color: rgba(233, 187, 25, 1);
-    margin-bottom: 5px;
-}
-
-.return-label {
-    font-size: 10px;
-    opacity: 0.9;
-    display: block;
-    color: #FFFFFF;
-    font-weight: 400;
-}
-
-.bottom-metrics {
-    display: flex;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.metric-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 16px 12px;
-    text-align: center;
-    color: #333333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    min-height: 120px;
-    max-width: 150px;
-}
-
-.metric-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-.metric-card .icon {
-    width: 36px;
-    height: 36px;
-    background: #FFFFFF;
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Ícone específico para Logística Reversa - setas circulares verde e azul escuro */
-.icon-logistics {
-    background: linear-gradient(135deg, #28a745 0%, #1e3a8a 100%);
-    color: white;
-    font-weight: bold;
-}
-
-/* Ícone específico para Fechamento de OS - checkmark verde */
-.icon-mobile-app {
-    background: #28a745;
-    color: white;
-    font-weight: bold;
-}
-
-/* Ícone específico para Perda de Material - hexágono cinza e rosa */
-.icon-material-loss {
-    background: linear-gradient(135deg, #6c757d 0%, #e91e63 100%);
-    color: white;
-    font-weight: bold;
-}
-
-.metric-value {
-    font-size: 22px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 6px;
-    line-height: 1.2;
-}
-
-.metric-label {
-     font-size: 11px;
-     color: #6c757d;
-     font-weight: 500;
-     line-height: 1.3;
- }
- 
- /* Estilos específicos para cada card individual */
- 
- /* Card de Logística Reversa */
- .logistics-card {
-     background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
-     border: 1px solid #d4edda;
- }
- 
- .logistics-card:hover {
-     background: linear-gradient(135deg, #d1ecf1 0%, #e8f4fd 100%);
-     transform: translateY(-3px);
-     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
- }
- 
- /* Card de Fechamento de OS via app */
- .mobile-app-card {
-     background: linear-gradient(135deg, #e8f5e8 0%, #f8fff8 100%);
-     border: 1px solid #c3e6cb;
- }
- 
- .mobile-app-card:hover {
-     background: linear-gradient(135deg, #d4edda 0%, #f1f8e9 100%);
-     transform: translateY(-3px);
-     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.25);
- }
- 
- /* Card de Perda de Material */
- .material-loss-card {
-     background: linear-gradient(135deg, #f8f9fa 0%, #fff0f5 100%);
-     border: 1px solid #e9ecef;
- }
- 
- .material-loss-card:hover {
-     background: linear-gradient(135deg, #f1f3f4 0%, #fce4ec 100%);
-     transform: translateY(-3px);
-     box-shadow: 0 6px 20px rgba(233, 30, 99, 0.2);
- }
- 
- /* Lightbox Styles */
- .lightbox-overlay {
-     position: fixed;
-     top: 0;
-     left: 0;
-     width: 100%;
-     height: 100%;
-     background-color: rgba(0, 0, 0, 0.6);
-     backdrop-filter: blur(4px);
-     z-index: 1000;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     padding: 20px;
-     box-sizing: border-box;
- }
- 
- .lightbox-content {
-     background: white;
-     border-radius: 16px;
-     padding: 32px;
-     max-width: 600px;
-     width: 100%;
-     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-     position: relative;
-     animation: lightboxFadeIn 0.3s ease-out;
- }
- 
- @keyframes lightboxFadeIn {
-     from {
-         opacity: 0;
-         transform: scale(0.9) translateY(-20px);
-     }
-     to {
-         opacity: 1;
-         transform: scale(1) translateY(0);
-     }
- }
- 
- .lightbox-title {
-     text-align: center;
-     font-size: 24px;
-     font-weight: 600;
-     color: #333;
-     margin: 0 0 24px 0;
- }
- 
- .lightbox-body {
-     display: flex;
-     gap: 24px;
-     align-items: flex-start;
- }
- 
- .lightbox-metric-card {
-     background: #f8f9fa;
-     border-radius: 12px;
-     padding: 20px;
-     text-align: center;
-     min-width: 140px;
-     border: 1px solid #e9ecef;
- }
- 
- .lightbox-icon {
-     font-size: 32px;
-     margin-bottom: 12px;
- }
- 
- .lightbox-metric-value {
-     font-size: 32px;
-     font-weight: 700;
-     color: #333;
-     margin-bottom: 8px;
- }
- 
- .lightbox-unit {
-     font-size: 24px;
-     font-weight: 600;
- }
- 
- .lightbox-metric-label {
-     font-size: 14px;
-     color: #666;
-     font-weight: 500;
- }
- 
- .lightbox-messages {
-     flex: 1;
-     display: flex;
-     flex-direction: column;
-     gap: 16px;
- }
- 
- .lightbox-message {
-     font-size: 16px;
-     line-height: 1.5;
-     color: #555;
-     margin: 0;
-     padding: 16px;
-     background: #f8f9fa;
-     border-radius: 8px;
-     border-left: 4px solid #007bff;
- }
- 
- /* Responsive Design */
- @media (max-width: 768px) {
-     .top-cards-layout {
-         grid-template-columns: 1fr;
-         gap: 5px;
-         margin-bottom: 10px;
-     }
-     
-     .main-productivity-card {
-         min-height: 102px;
-         padding: 20px;
-     }
-     
-     .return-metric-card {
-         min-height: 160px;
-         padding: 20px;
-     }
-     
-     .bottom-metrics {
-         grid-template-columns: 1fr;
-         gap: 15px;
-     }
-     
-     .metric-card {
-         padding: 20px 16px;
-     }
-     
-     .lightbox-content {
-         padding: 24px;
-         margin: 20px;
-     }
-     
-     .lightbox-body {
-         flex-direction: column;
-         gap: 20px;
-     }
-     
-     .lightbox-metric-card {
-         min-width: auto;
-         width: 100%;
-     }
-     
-     .lightbox-title {
-         font-size: 20px;
-     }
- }
- 
- @media (max-width: 480px) {
-     .performance {
-         margin: 20px 0;
-     }
-     
-     .performance h3 {
-         font-size: 16px;
-         margin-bottom: 15px;
-     }
-     
-     .main-productivity-card {
-         min-height: 160px;
-         padding: 16px;
-     }
-     
-     .productivity-header h4 {
-         font-size: 14px;
-     }
-     
-     .big-number {
-         font-size: 28px;
-     }
-     
-     .lightbox-overlay {
-         padding: 10px;
-     }
-     
-     .lightbox-content {
-         padding: 20px;
-     }
-     
-     .lightbox-message {
-         font-size: 14px;
-         padding: 12px;
-     }
-     
-     .lightbox-metric-value {
-         font-size: 28px;
-     }
-     
-     .lightbox-unit {
-         font-size: 20px;
-     }
- }
-  `;
-};
-
-export const getPerformanceScript = () => {
-  return `
-    // Carregar Chart.js se não estiver carregado
-    if (typeof Chart === 'undefined') {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-      script.onload = function() {
-        initializeCharts();
-      };
-      document.head.appendChild(script);
-    } else {
-      initializeCharts();
-    }
-    
-    function initializeCharts() {
-      // Gráfico de Produtividade
-      const productivityCtx = document.getElementById('productivityChart');
-      if (productivityCtx) {
-        new Chart(productivityCtx, {
-          type: 'line',
-          data: {
-            labels: ['1', '2', '3'],
-            datasets: [{
-              label: 'Produtividade',
-              data: [30, 60, 75],
-              borderColor: '#000000',
-              backgroundColor: 'rgba(166, 206, 56, 1)',
-              borderWidth: 3,
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#000000',
-              pointBorderColor: '#000000',
-              pointRadius: 3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              }
-            },
-            scales: {
-              x: {
-                display: true,
-                grid: {
-                  display: false
-                },
-                ticks: {
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  font: {
-                    size: 5
-                  }
-                }
-              },
-              y: {
-                display: true,
-                grid: {
-                  color: 'rgba(255, 255, 255, 0.2)'
-                },
-                ticks: {
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  font: {
-                    size: 12
-                  }
-                },
-                min: 20,
-                max: 100
-              }
-            }
-          }
-        });
-      }
-      
-      // Lightbox functionality
-      const returnCard = document.querySelector('.return-metric-card');
-      const lightbox = document.getElementById('returnRateLightbox');
-      
-      if (returnCard && lightbox) {
-        // Open lightbox when clicking on return card
-        returnCard.addEventListener('click', function(e) {
-          e.preventDefault();
-          lightbox.style.display = 'flex';
-          document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        });
-        
-        // Close lightbox when clicking outside the content
-        lightbox.addEventListener('click', function(e) {
-          if (e.target === lightbox) {
-            lightbox.style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restore scrolling
-          }
-        });
-        
-        // Close lightbox with Escape key
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && lightbox.style.display === 'flex') {
-            lightbox.style.display = 'none';
-            document.body.style.overflow = 'auto';
-          }
-        });
-      }
-
-    }
-  `;
-};
+const styles = StyleSheet.create({
+  performanceContainer: {
+    paddingHorizontal: 15,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  topCardsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 15,
+  },
+  productivityContainer: {
+    flex: 0.9,
+  },
+  returnContainer: {
+    flex: 0.3,
+  },
+});

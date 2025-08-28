@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface QuickAction {
   id: string;
@@ -20,63 +21,51 @@ export const QuickActionsSection: React.FC<QuickActionsSectionProps> = ({
   ]
 }) => {
   return (
-    `
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h3>Ações Rápidas</h3>
-        <div class="actions-grid">
-            ${actions.map(action => `
-                <div class="action-card">
-                    <div class="icon">${action.icon}</div>
-                    <h4>${action.title}</h4>
-                </div>
-            `).join('')}
-        </div>
-    </div>
-    `
+    <View style={styles.quickActions}>
+      <Text style={styles.title}>Ações Rápidas</Text>
+      <View style={styles.actionsGrid}>
+        {actions.map(action => (
+          <TouchableOpacity key={action.id} style={styles.actionCard}>
+            <Text style={styles.icon}>{action.icon}</Text>
+            <Text style={styles.actionTitle}>{action.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
   );
 };
 
-export const getQuickActionsStyles = () => {
-  return `
-    /* Quick Actions */
-    .quick-actions {
-        margin: 20px 0;
-    }
-    
-    .quick-actions h3 {
-        margin-bottom: 15px;
-        font-size: 18px;
-    }
-    
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 15px;
-    }
-    
-    .action-card {
-        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-        border-radius: 12px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: transform 0.2s;
-        color: #1a1a2e;
-    }
-    
-    .action-card:hover {
-        transform: translateY(-2px);
-    }
-    
-    .action-card .icon {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-    
-    .action-card h4 {
-        font-size: 14px;
-        font-weight: bold;
-    }
-  `;
-};
+const styles = StyleSheet.create({
+  quickActions: {
+    margin: 20,
+  },
+  title: {
+    marginBottom: 15,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1a1a1a',
+  },
+  actionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 15,
+  },
+  actionCard: {
+    backgroundColor: '#00d4ff',
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+    minWidth: 120,
+    flex: 1,
+  },
+  icon: {
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  actionTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    textAlign: 'center',
+  },
+});

@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 interface Notification {
   id: string;
@@ -15,68 +16,65 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
   notifications = [
     {
       id: 'attendance',
-      icon: '✅',
+      icon: '•',
       iconClass: 'icon-success',
       message: '0 faltas e 0 atestados este mês'
     },
     {
       id: 'payslip',
-      icon: '📄',
+      icon: '•',
       iconClass: 'icon-info',
       message: 'Holerite do mês de agosto disponível para download'
     }
   ]
 }) => {
   return (
-    `
-    <!-- Notifications -->
-    <div class="notifications">
-        <h3>Notificações</h3>
-        ${notifications.map(notification => `
-            <div class="notification-item">
-                <div class="icon ${notification.iconClass}">${notification.icon}</div>
-                <span>${notification.message}</span>
-            </div>
-        `).join('')}
-    </div>
-    `
+    <View style={styles.notifications}>
+      <Text style={styles.title}>Notificações</Text>
+      {notifications.map(notification => (
+        <View key={notification.id} style={styles.notificationItem}>
+          <Text style={styles.icon}>
+            {notification.icon}
+          </Text>
+          <Text style={styles.message}>{notification.message}</Text>
+        </View>
+      ))}
+    </View>
   );
 };
 
-export const getNotificationsStyles = () => {
-  return `
-    /* Notifications */
-    .notifications {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border: 1px solid #dee2e6;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 20px 0;
-        color: #333333;
-    }
-    
-    .notifications h3 {
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
-    
-    .notification-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
-    
-    .notification-item .icon {
-        width: 20px;
-        height: 20px;
-        background: #00d4ff;
-        border-radius: 50%;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-    }
-  `;
-};
+const styles = StyleSheet.create({
+  notifications: {
+    backgroundColor: '#f8f9fa',
+    borderWidth: 1,
+    borderColor: '#dee2e6',
+    borderRadius: 12,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 3,
+    marginHorizontal: 14,
+  },
+  title: {
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'rgba(70, 70, 70, 1)',
+  },
+  notificationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    textAlign: 'center',
+    fontSize: 12,
+    lineHeight: 20,
+  },
+  message: {
+    fontSize: 14,
+    color: 'rgba(151, 151, 151, 1)',
+    flex: 1,
+  },
+});

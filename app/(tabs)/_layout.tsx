@@ -1,8 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -14,7 +12,6 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
         tabBarStyle: {
           display: 'none',
         },
@@ -29,6 +26,12 @@ export default function TabLayout() {
         name="contacts"
         options={{
           title: 'Contatos',
+        }}
+      />
+      <Tabs.Screen
+        name="os"
+        options={{
+          title: 'Fechamento de OS',
         }}
       />
     </Tabs>
