@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
 import { useSegments } from 'expo-router';
 
 // Importações do sistema de configuração de rotas
 import { RouteManager, type PageConfig } from '@/config/routes.config';
 import { DashboardHeader } from './DashboardHeader';
 import { ProfileCard, ProfileCardUtils } from './ProfileCard';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 
 /**
  * Props do componente Main
@@ -86,6 +87,32 @@ export const Main: React.FC<MainProps> = ({
   className = '',
   containerProps = {} 
 }) => {
+  const { profileData, isLoading } = useUserProfile();
+
+  // Mostrar loading enquanto carrega os dados
+  if (isLoading) {
+    return (
+      <View className={`flex-1 bg-gray-100 w-full justify-center items-center ${className}`.trim()}>
+        <ActivityIndicator size="large" color="#0066cc" />
+        <Text className="mt-4 text-gray-600">Carregando perfil...</Text>
+      </View>
+    );
+  }
+
+  // Mostrar erro se não conseguir carregar os dados
+  if (!profileData) {
+    return (
+      <View className={`flex-1 bg-gray-100 w-full justify-center items-center ${className}`.trim()}>
+        <Text className="text-red-600 text-center">Erro ao carregar dados do perfil</Text>
+      </View>
+    );
+  }
+
+  // Converter medalhas do JSON para o formato do ProfileCard
+  const profileMedals = profileData.medals.map(medal => 
+    ProfileCardUtils.createMedal(medal.emoji, medal.active, medal.title)
+  );
+
   return (
     <View 
       className={`flex-1 bg-gray-100 w-full ${className}`.trim()}
@@ -97,21 +124,18 @@ export const Main: React.FC<MainProps> = ({
       {/* Container principal com scroll para o conteúdo */}
       <ScrollView 
         className="flex-1 w-full"
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 20, paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* ProfileCard fixo - sempre visível logo após o header */}
+        {/* ProfileCard fixo - sempre visível no topo */}
         <View className="px-2.5 pt-2.5 pb-0">
           <ProfileCard 
-            userName="Renan Oliveira"
-            userRole="Desenvolvedor"
-            medals={[
-              ProfileCardUtils.createMedal("🏆", true, "Troféu de Excelência"),
-              ProfileCardUtils.createMedal("🥇", true, "Medalha de Ouro"),
-              ProfileCardUtils.createMedal("🥈", false, "Medalha de Prata")
-            ]}
-            motivationText="Descubra o que falta para você atingir o próximo nível"
-            variant="default"
+            userName={profileData.user.userName}
+            userRole={profileData.user.userRole}
+            medals={profileMedals}
+            motivationText={profileData.profile.motivationText}
+            variant={profileData.profile.variant as any}
+            showDivider={profileData.profile.showDivider}
           />
         </View>
         

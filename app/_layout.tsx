@@ -6,6 +6,8 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { AuthWrapper } from '@/components/AuthWrapper';
+import { UserProfileProvider } from '@/contexts/UserProfileContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -20,10 +22,15 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <UserProfileProvider>
+        <AuthWrapper>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </AuthWrapper>
+      </UserProfileProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

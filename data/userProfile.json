@@ -1,0 +1,68 @@
+{
+  "user": {
+    "id": "user_001",
+    "userName": "Renan Oliveira",
+    "userRole": "Desenvolvedor",
+    "userInitials": "RO",
+    "email": "renan.oliveira@empresa.com",
+    "avatar": null,
+    "department": "Tecnologia",
+    "level": "Senior",
+    "joinDate": "2022-03-15"
+  },
+  "medals": [
+    {
+      "id": "medal_001",
+      "emoji": "🏆",
+      "active": true,
+      "title": "Troféu de Excelência",
+      "description": "Reconhecimento por excelência no trabalho",
+      "earnedDate": "2024-01-15"
+    },
+    {
+      "id": "medal_002",
+      "emoji": "🥇",
+      "active": true,
+      "title": "Medalha de Ouro",
+      "description": "Primeira colocação em projeto",
+      "earnedDate": "2024-01-10"
+    },
+    {
+      "id": "medal_003",
+      "emoji": "🥈",
+      "active": false,
+      "title": "Medalha de Prata",
+      "description": "Segunda colocação em competição",
+      "earnedDate": null
+    },
+    {
+      "id": "medal_004",
+      "emoji": "🥉",
+      "active": false,
+      "title": "Medalha de Bronze",
+      "description": "Terceira colocação em desafio",
+      "earnedDate": null
+    }
+  ],
+  "profile": {
+    "motivationText": "Descubra o que falta para você atingir o próximo nível",
+    "variant": "default",
+    "showDivider": true,
+    "backgroundColor": "bg-slate-700",
+    "textColor": "text-white"
+  },
+  "stats": {
+    "totalMedals": 4,
+    "activeMedals": 2,
+    "completedProjects": 12,
+    "currentLevel": 3,
+    "experiencePoints": 2450,
+    "nextLevelPoints": 3000
+  },
+  "preferences": {
+    "theme": "dark",
+    "language": "pt-BR",
+    "notifications": true,
+    "showAchievements": true
+  }
+}

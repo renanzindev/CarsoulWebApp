@@ -24,15 +24,15 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
 
   return (
-    <View className="fixed top-0 left-0 right-0 z-50 bg-slate-800 shadow-lg">
-      {/* Header Superior */}
-      <View className="flex-row items-center justify-between px-3 pt-14 pb-3">
+    <View className="absolute bottom-0 left-0 right-0 z-[9999] bg-slate-800 shadow-lg mt-4">
+      {/* Header Inferior */}
+      <View className="flex-row items-center justify-between px-4 pt-4 pb-12">
         
         {/* Logo no canto esquerdo */}
-        <Image source={require('../assets/images/logo-carsoul1.png')} className="ml-4 w-24 h-10" resizeMode="contain" />
+        <Image source={require('../assets/images/logo-carsoul1.png')} className="ml-4 w-28 h-10" resizeMode="contain" />
         
         {/* Ícone da sidebar no canto direito */}
-        <TouchableOpacity onPress={toggleSidebar} className="p-4 rounded-lg bg-slate-800 mr-4">
+        <TouchableOpacity onPress={toggleSidebar} className="p-3 rounded-lg bg-slate-700 mr-4 items-center justify-center min-w-12 min-h-12">
           <Text className="text-white text-xl font-bold">☰</Text>
         </TouchableOpacity>
       </View>

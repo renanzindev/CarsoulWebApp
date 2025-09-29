@@ -41,6 +41,7 @@ export const PostNotificationCard: React.FC<PostNotificationCardProps> = ({
         case 'close-os':
           console.log('Fechando OS');
           break;
+
         default:
           console.log('Card não implementado:', id);
       }
@@ -52,6 +53,7 @@ export const PostNotificationCard: React.FC<PostNotificationCardProps> = ({
     const isPerdaMaterial = id === 'perda-material';
     const isNewAction = id === 'new-action';
     const isContacts = id === 'contacts';
+
     
     return (
       <View style={[isNewAction ? styles.newActionContent : styles.cardContent]}>
@@ -221,6 +223,7 @@ const styles = StyleSheet.create({
     color: 'rgba(166, 206, 56, 1)',
     marginBottom: 8,
   },
+
 });
 
 // Estilos removidos - agora usando StyleSheet do React Native

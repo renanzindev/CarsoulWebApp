@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { Linking, Text, TouchableOpacity, View } from 'react-native';
 
 interface Contact {
   id: number;
@@ -8,6 +8,7 @@ interface Contact {
   email?: string;
   icon: string;
   description: string;
+  role: string;
 }
 
 interface ContactsSectionProps {
@@ -22,7 +23,8 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
       phone: "31 99847-6992",
       email: "fabricio.souza@carsoul.com.br",
       icon: "👨‍💼",
-      description: "Coordenador Produção"
+      description: "Coordenador Produção",
+      role: "Coordenador Produção"
     },
     {
       id: 2,
@@ -30,7 +32,8 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
       phone: "31 99807-1705",
       email: "gilene@carsoul.com.br",
       icon: "👨‍💼",
-      description: "Supervisor Tecnico"
+      description: "Supervisor Tecnico",
+      role: "Supervisor Técnico"
     },
     {
       id: 3,
@@ -38,7 +41,8 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
       phone: "31 91234-5678",
       email: "david@carsoul.com.br",
       icon: "👨‍💼",
-      description: "Supervisor Operacional I"
+      description: "Supervisor Operacional I",
+      role: "Supervisor Operacional I"
     },
     {
       id: 4,
@@ -46,7 +50,8 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
       phone: "31 98267-1280",
       email: "alex@carsoul.com.br",
       icon: "👩‍💼",
-      description: "PCP"
+      description: "PCP",
+      role: "PCP"
     },
     {
       id: 5,
@@ -54,22 +59,27 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
       phone: "31 99934-1098",
       email: "tic@carsoul.com.br",
       icon: "👨‍💼",
-      description: "TI"
+      description: "TI",
+      role: "TI"
     },
-
     {
       id: 7,
       name: "Jessica",
       phone: "31 99724-2083",
       email: "pessoal@carsoul.com.br",
       icon: "👩‍💼",
-      description: "Departamento Pessoal"
+      description: "Departamento Pessoal",
+      role: "Departamento Pessoal"
     }
   ];
 
   const contactsList = contacts || defaultContacts;
 
   const handlePhoneCall = (phone: string) => {
+    Linking.openURL(`tel:${phone}`);
+  };
+
+  const handleCall = (phone: string) => {
     Linking.openURL(`tel:${phone}`);
   };
 
@@ -83,42 +93,34 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
   };
 
   return (
-    <View style={styles.contactsSection}>
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>📞 Contatos Úteis</Text>
+    <View className="rounded-xl m-2 px-4 bg-white">
+      <View className="items-center mb-6">
+        <Text className="text-2xl font-bold m-2 text-gray-900">📞 Contatos Úteis</Text>
       </View>
       
-      <View style={styles.contactsGrid}>
+      <View className="mb-6">
         {contactsList.map(contact => (
-          <View key={contact.id} style={styles.contactCard}>
-            <Text style={styles.contactIcon}>{contact.icon}</Text>
-            <View style={styles.contactInfo}>
-              <Text style={styles.contactName}>{contact.name}</Text>
-              <Text style={styles.contactDescription}>{contact.description}</Text>
-              <View style={styles.contactDetails}>
-                <Text style={styles.contactPhone}>📞 {contact.phone}</Text>
-              </View>
+          <View key={contact.id} className="bg-white rounded-xl p-4 mb-4 shadow-lg border border-white flex-row items-center">
+            <View className="w-12 h-12 bg-gray-100 rounded-full mr-3 items-center justify-center">
+              <Text className="text-lg font-bold text-gray-900">{contact.name.charAt(0)}</Text>
             </View>
-            <View style={styles.contactActions}>
+            <View className="flex-1 ml-3">
+              <Text className="text-sm font-semibold text-gray-900 mb-0.5">{contact.name}</Text>
+              <Text className="text-xs text-gray-600 mb-1">{contact.role}</Text>
+              <Text className="text-xs text-gray-600 font-medium">{contact.phone}</Text>
+            </View>
+            <View className="flex-row items-center gap-2">
               <TouchableOpacity 
-                style={[styles.actionBtn, styles.phoneBtn]} 
-                onPress={() => handlePhoneCall(contact.phone)}
+                className="w-8 h-8 rounded-full items-center justify-center shadow-md bg-green-500"
+                onPress={() => handleCall(contact.phone)}
               >
-                <Text style={styles.actionBtnText}>📞</Text>
+                <Text className="text-sm text-white">📞</Text>
               </TouchableOpacity>
-              {contact.email && (
-                <TouchableOpacity 
-                  style={[styles.actionBtn, styles.emailBtn]} 
-                  onPress={() => handleEmail(contact.email!)}
-                >
-                  <Text style={styles.actionBtnText}>✉️</Text>
-                </TouchableOpacity>
-              )}
               <TouchableOpacity 
-                style={[styles.actionBtn, styles.whatsappBtn]} 
+                className="w-8 h-8 rounded-full items-center justify-center shadow-md bg-green-400"
                 onPress={() => handleWhatsApp(contact.phone)}
               >
-                <Text style={styles.actionBtnText}>💬</Text>
+                <Text className="text-sm text-white">💬</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -127,107 +129,3 @@ export const ContactsSection: React.FC<ContactsSectionProps> = ({ contacts }) =>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  contactsSection: {
-    margin: 20,
-    paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
-  },
-  sectionHeader: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 8,
-  },
-  contactsGrid: {
-    marginBottom: 24,
-  },
-  contactCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  contactIcon: {
-    fontSize: 32,
-    width: 48,
-    height: 48,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    backgroundColor: '#f8f9fa',
-    borderRadius: 24,
-    marginRight: 12,
-  },
-  contactInfo: {
-    flex: 1,
-  },
-  contactName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 4,
-  },
-  contactDescription: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 8,
-  },
-  contactDetails: {
-    flexDirection: 'column',
-  },
-  contactPhone: {
-    fontSize: 14,
-    color: '#2196f3',
-    fontWeight: '500',
-  },
-  contactActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  actionBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  actionBtnText: {
-    fontSize: 16,
-    color: 'white',
-  },
-  phoneBtn: {
-    backgroundColor: '#4caf50',
-  },
-  emailBtn: {
-    backgroundColor: '#2196f3',
-  },
-  whatsappBtn: {
-    backgroundColor: '#25d366',
-  },
-});

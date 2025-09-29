@@ -1,7 +1,8 @@
+import { useAuth } from '@/contexts/AuthContext';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Alert, Modal, Text, TouchableOpacity, View } from 'react-native';
 
 interface SidebarProps {
   isVisible: boolean;
@@ -10,31 +11,56 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    onClose();
+    Alert.alert(
+      'Confirmar Logout',
+      'Tem certeza que deseja sair do aplicativo?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await logout();
+              console.log('Usuário fez logout');
+            } catch (error) {
+              console.error('Erro ao fazer logout:', error);
+              Alert.alert('Erro', 'Não foi possível fazer logout. Tente novamente.');
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const navigateToPage = (page: string) => {
     onClose();
     switch (page) {
       case 'dashboard':
-        router.push('//dashboard');
+        router.push('/(tabs)');
         break;
       case 'contacts':
-        router.push('/contacts');
+        router.push('/(tabs)/contacts');
         break;
 
       case 'conquistas':
-        // Página de conquistas ainda não implementada
-        console.log('Página de conquistas em desenvolvimento');
+        router.push('/(tabs)/conquistas');
         break;
       case 'os':
-        router.push('/os');
+        router.push('/(tabs)/os');
         break;
       case 'pcp':
-        // Página de PCP ainda não implementada
-        console.log('Página de PCP em desenvolvimento');
+        router.push('/(tabs)/pcp');
         break;
       case 'logout':
-        // Implementar lógica de logout
-        console.log('Logout em desenvolvimento');
+        handleLogout();
         break;
       default:
         break;
@@ -75,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
             colors={['#0a7ea4', '#0891b2']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
-            className="pt-16 pb-8 px-6"
+            className="pt-20 pb-8 px-6"
           >
             <View className="flex-row items-center">
               <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center mr-4">

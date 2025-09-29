@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 interface Notification {
   id: string;
@@ -28,9 +29,20 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
     }
   ]
 }) => {
+  const router = useRouter();
+
+  const handleViewAllNotifications = () => {
+    router.push('/notifications');
+  };
+
   return (
     <View style={styles.notifications}>
-      <Text style={styles.title}>Notificações</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Notificações</Text>
+        <TouchableOpacity onPress={handleViewAllNotifications}>
+          <Text style={styles.viewAllButton}>Ver todas</Text>
+        </TouchableOpacity>
+      </View>
       {notifications.map(notification => (
         <View key={notification.id} style={styles.notificationItem}>
           <Text style={styles.icon}>
@@ -54,11 +66,21 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     marginHorizontal: 14,
   },
-  title: {
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 5,
+  },
+  title: {
     fontSize: 16,
     fontWeight: '600',
     color: 'rgba(70, 70, 70, 1)',
+  },
+  viewAllButton: {
+    fontSize: 14,
+    color: '#1e293b',
+    fontWeight: '500',
   },
   notificationItem: {
     flexDirection: 'row',

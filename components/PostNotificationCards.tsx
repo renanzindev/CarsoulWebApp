@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { PostNotificationCard } from './cards/PostNotificationCard';
 
 interface PostNotificationCardData {
@@ -36,7 +36,8 @@ export const PostNotificationCards: React.FC<PostNotificationCardsProps> = ({
       backgroundColor: 'rgba(94, 94, 94, 1)',
       route: '/os'
     },
-  {
+
+    {
       id: 'contacts',
       title: 'Contatos Úteis',
       subtitle: 'Acessar',
@@ -50,7 +51,12 @@ export const PostNotificationCards: React.FC<PostNotificationCardsProps> = ({
 }) => {
   return (
     <View style={styles.postNotificationCards}>
-      <View style={styles.cardsContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        style={styles.cardsCarousel}
+        contentContainerStyle={styles.cardsContainer}
+      >
         {cards.map(card => (
           <PostNotificationCard
             key={card.id}
@@ -63,7 +69,7 @@ export const PostNotificationCards: React.FC<PostNotificationCardsProps> = ({
             route={card.route}
           />
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -73,13 +79,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  cardsCarousel: {
+    marginHorizontal: 15,
+  },
   cardsContainer: {
     flexDirection: 'row',
     gap: 10,
-    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginHorizontal: 15,
+    paddingRight: 30, // Extra padding para o último card
   },
 });
 
