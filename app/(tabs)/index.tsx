@@ -1,5 +1,5 @@
-import { Main } from '@/components/Main';
-import { SlidingSidebar } from '@/components/SlidingSidebar';
+import { Main } from '../../components/Main';
+import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 /**
  * Tela principal do Dashboard

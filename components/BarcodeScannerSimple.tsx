@@ -5,15 +5,19 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import ScannerService from '../Services/ScannerService';
 
 interface BarcodeScannerSimpleProps {
   visible: boolean;
   onClose: () => void;
-  onCodeScanned: (code: string) => void;
+  onCodeScanned: (code: string, data?: any) => void;
+  onError?: (error: string) => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -21,10 +25,12 @@ const { width, height } = Dimensions.get('window');
 export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
   visible,
   onClose,
-  onCodeScanned
+  onCodeScanned,
+  onError
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (visible && !permission?.granted) {
@@ -32,12 +38,63 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
     }
   }, [visible]);
 
-  const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
-    if (!scanned) {
-      setScanned(true);
-      console.log('Código de barras escaneado:', data);
-      onCodeScanned(data);
+  const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+    if (scanned || isProcessing) return;
+    
+    setScanned(true);
+    setIsProcessing(true);
+    console.log('Código de barras escaneado:', data);
+    
+    try {
+      // Registra o escaneamento para auditoria
+      await ScannerService.logScan('barcode', data, 'scan');
+      
+      // Processa o código de barras na API
+      const [success, result] = await ScannerService.processBarcode(data);
+      
+      if (success) {
+        console.log('Código de barras processado com sucesso:', result);
+        onCodeScanned(data, result);
+        onClose();
+      } else {
+        console.error('Erro ao processar código de barras:', result);
+        
+        // Tenta buscar produto por código de barras
+        const [productSuccess, productResult] = await ScannerService.getProductByBarcode(data);
+        
+        if (productSuccess) {
+          console.log('Produto encontrado:', productResult);
+          onCodeScanned(data, productResult);
+          onClose();
+        } else {
+          // Se não conseguir processar, ainda assim retorna o código
+          const errorMessage = 'Não foi possível processar o código de barras na API, mas o código foi lido com sucesso.';
+          console.warn(errorMessage);
+          
+          if (onError) {
+            onError(errorMessage);
+          } else {
+            Alert.alert('Aviso', errorMessage);
+          }
+          
+          onCodeScanned(data, null);
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao processar código de barras:', error);
+      const errorMessage = 'Erro ao conectar com a API. Código lido: ' + data;
+      
+      if (onError) {
+        onError(errorMessage);
+      } else {
+        Alert.alert('Erro', errorMessage);
+      }
+      
+      onCodeScanned(data, null);
       onClose();
+    } finally {
+      setIsProcessing(false);
       
       setTimeout(() => {
         setScanned(false);
@@ -111,13 +168,21 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
         >
           {/* Overlay */}
           <View style={styles.overlay}>
-            <View style={styles.scanArea} />
+            <View style={styles.scanArea}>
+              {/* Loading indicator */}
+              {isProcessing && (
+                <View style={styles.loadingOverlay}>
+                  <ActivityIndicator size="large" color="#10B981" />
+                  <Text style={styles.loadingText}>Processando...</Text>
+                </View>
+              )}
+            </View>
           </View>
 
           {/* Instructions */}
           <View style={styles.instructions}>
             <Text style={styles.instructionText}>
-              Posicione o código de barras na área marcada
+              {isProcessing ? 'Processando código...' : 'Posicione o código de barras na área marcada'}
             </Text>
           </View>
         </CameraView>
@@ -220,5 +285,22 @@ const styles = StyleSheet.create({
   closeText: {
     color: '#999',
     fontSize: 16,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  loadingText: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

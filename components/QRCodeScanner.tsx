@@ -5,25 +5,30 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import { CameraView, Camera, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import ScannerService from '../Services/ScannerService';
 
 interface QRCodeScannerProps {
   visible: boolean;
   onClose: () => void;
-  onCodeScanned: (code: string) => void;
+  onCodeScanned: (code: string, data?: any) => void;
+  onError?: (error: string) => void;
 }
 
 export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
   visible,
   onClose,
-  onCodeScanned
+  onCodeScanned,
+  onError
 }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (visible && !permission?.granted) {
@@ -37,16 +42,69 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
     }
   }, [visible, permission]);
 
-  const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
+  const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
+    if (isProcessing) return;
+    
     console.log('QR Code escaneado:', { type, data });
     setScanned(true);
-    onCodeScanned(data);
-    onClose();
+    setIsProcessing(true);
     
-    // Reset scanned state after a delay
-    setTimeout(() => {
-      setScanned(false);
-    }, 2000);
+    try {
+      // Registra o escaneamento para auditoria
+      await ScannerService.logScan('qr', data, 'scan');
+      
+      // Processa o QR Code na API
+      const [success, result] = await ScannerService.processQRCode(data);
+      
+      if (success) {
+        console.log('QR Code processado com sucesso:', result);
+        onCodeScanned(data, result);
+        onClose();
+      } else {
+        console.error('Erro ao processar QR Code:', result);
+        
+        // Tenta buscar informações alternativas
+        const [infoSuccess, infoResult] = await ScannerService.getInfoByQRCode(data);
+        
+        if (infoSuccess) {
+          console.log('Informações encontradas:', infoResult);
+          onCodeScanned(data, infoResult);
+          onClose();
+        } else {
+          // Se não conseguir processar, ainda assim retorna o código
+          const errorMessage = 'Não foi possível processar o QR Code na API, mas o código foi lido com sucesso.';
+          console.warn(errorMessage);
+          
+          if (onError) {
+            onError(errorMessage);
+          } else {
+            Alert.alert('Aviso', errorMessage);
+          }
+          
+          onCodeScanned(data, null);
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao processar QR Code:', error);
+      const errorMessage = 'Erro ao conectar com a API. Código lido: ' + data;
+      
+      if (onError) {
+        onError(errorMessage);
+      } else {
+        Alert.alert('Erro', errorMessage);
+      }
+      
+      onCodeScanned(data, null);
+      onClose();
+    } finally {
+      setIsProcessing(false);
+      
+      // Reset scanned state after a delay
+      setTimeout(() => {
+        setScanned(false);
+      }, 2000);
+    }
   };
 
   const handleCameraError = (error: any) => {
@@ -182,6 +240,14 @@ export const QRCodeScanner: React.FC<QRCodeScannerProps> = ({
               <View className="absolute -top-1 -right-1 w-6 h-6 border-r-4 border-t-4 border-green-500 rounded-tr-lg" />
               <View className="absolute -bottom-1 -left-1 w-6 h-6 border-l-4 border-b-4 border-green-500 rounded-bl-lg" />
               <View className="absolute -bottom-1 -right-1 w-6 h-6 border-r-4 border-b-4 border-green-500 rounded-br-lg" />
+              
+              {/* Loading indicator */}
+              {isProcessing && (
+                <View className="absolute inset-0 bg-black/70 rounded-2xl flex justify-center items-center">
+                  <ActivityIndicator size="large" color="#10B981" />
+                  <Text className="text-white mt-2 font-medium">Processando...</Text>
+                </View>
+              )}
             </View>
           </View>
 

@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -8,6 +10,7 @@ import {
   View
 } from 'react-native';
 import { BarcodeScannerSimple } from './BarcodeScannerSimple';
+import ScannerService from '../Services/ScannerService';
 
 interface Launch {
   id: string;
@@ -33,65 +36,82 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
   const [searchCode, setSearchCode] = useState('');
   const [showCamera, setShowCamera] = useState(false);
   const [osInfo, setOsInfo] = useState<OSInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleBarcodePress = () => {
     setShowCamera(true);
   };
 
-  const handleCodeScanned = (code: string) => {
+  const handleCodeScanned = async (code: string) => {
     setSearchCode(code);
     setShowCamera(false);
-    // Simular busca da OS com o código escaneado
-    fetchOSInfo(code);
+    // Buscar OS com o código escaneado via API
+    await fetchOSInfo(code);
   };
 
   const handleCloseCamera = () => {
     setShowCamera(false);
   };
 
-  // Dados mock para simular informações da OS
-  const mockOSData: Record<string, OSInfo> = {
-    'OS123456': {
-      numero: 'OS-2024-123456',
-      servico: 'Troca de óleo e filtros',
-      modelo: 'Honda Civic 2020 - ABC-1234',
-      concessionaria: 'Honda Center São Paulo',
-      status: 'Em andamento',
-      dataAbertura: '15/01/2024'
-    },
-    'OS789012': {
-      numero: 'OS-2024-789012',
-      servico: 'Revisão dos 10.000 km',
-      modelo: 'Toyota Corolla 2021 - XYZ-5678',
-      concessionaria: 'Toyota Premium',
-      status: 'Aguardando peças',
-      dataAbertura: '12/01/2024'
-    },
-    'OS345678': {
-      numero: 'OS-2024-345678',
-      servico: 'Reparo no sistema de freios',
-      modelo: 'Volkswagen Jetta 2019 - DEF-9012',
-      concessionaria: 'VW Center',
-      status: 'Pronto para entrega',
-      dataAbertura: '10/01/2024'
-    }
-  };
 
-  const fetchOSInfo = (code: string) => {
-    // Simular busca da OS
-    const osData = mockOSData[code];
-    if (osData) {
-      setOsInfo(osData);
-    } else {
-      // Gerar dados genéricos se o código não for encontrado
+
+  const fetchOSInfo = async (code: string) => {
+    setIsLoading(true);
+    setOsInfo(null);
+    
+    try {
+      // Log do escaneamento
+      await ScannerService.logScan('barcode', code, 'os_search');
+      
+      // Buscar OS por código
+      const [success, data] = await ScannerService.getOSByCode(code);
+      
+      if (success && data) {
+        // Mapear dados da API para o formato esperado
+        setOsInfo({
+          numero: data.numero || `OS-${code}`,
+          servico: data.servico || data.descricao || 'Serviço não especificado',
+          modelo: data.modelo || data.veiculo || 'Modelo não informado',
+          concessionaria: data.concessionaria || data.local || 'Local não informado',
+          status: data.status || 'PENDENTE',
+          dataAbertura: data.dataAbertura || data.data_abertura || new Date().toLocaleDateString('pt-BR')
+        });
+      } else {
+        // Se não encontrou na API, mostrar dados genéricos
+        setOsInfo({
+          numero: `OS-${code}`,
+          servico: 'OS não encontrada',
+          modelo: 'Código escaneado: ' + code,
+          concessionaria: 'Verificar código',
+          status: 'NÃO ENCONTRADA',
+          dataAbertura: new Date().toLocaleDateString('pt-BR')
+        });
+        
+        Alert.alert(
+          'OS não encontrada',
+          `Não foi possível encontrar uma OS com o código: ${code}`,
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      console.error('Erro ao buscar OS:', error);
+      Alert.alert(
+        'Erro',
+        'Ocorreu um erro ao buscar a OS. Verifique sua conexão e tente novamente.',
+        [{ text: 'OK' }]
+      );
+      
+      // Mostrar dados de erro
       setOsInfo({
-        numero: `OS-2024-${code}`,
-        servico: 'FILME SOLAR 20%',
-        modelo: 'DOLPHIN MINI',
-        concessionaria: 'BYD PAMPULHA',
-        status: 'PENDENTE',
+        numero: `ERRO-${code}`,
+        servico: 'Erro na consulta',
+        modelo: 'Verifique a conexão',
+        concessionaria: 'Tente novamente',
+        status: 'ERRO',
         dataAbertura: new Date().toLocaleDateString('pt-BR')
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,13 +142,13 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
     }
   ];
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchCode.trim()) {
-      alert('Por favor, digite ou escaneie um código para consultar.');
+      Alert.alert('Atenção', 'Por favor, digite ou escaneie um código para consultar.');
       return;
     }
     console.log('Consultando código:', searchCode);
-    fetchOSInfo(searchCode);
+    await fetchOSInfo(searchCode);
   };
 
   return (
@@ -153,11 +173,19 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
           </View>
           
           <TouchableOpacity 
-            className="bg-green-500 rounded-xl py-4 px-6 items-center active:bg-green-600"
+            className={`${isLoading ? 'bg-gray-400' : 'bg-green-500'} rounded-xl py-4 px-6 items-center active:bg-green-600`}
             onPress={handleSearch}
+            disabled={isLoading}
             style={{ shadowColor: '#22c55e', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 }}
           >
-            <Text className="text-white font-bold text-lg">Consultar Cod.</Text>
+            {isLoading ? (
+              <View className="flex-row items-center">
+                <ActivityIndicator size="small" color="#ffffff" />
+                <Text className="text-white font-bold text-lg ml-2">Consultando...</Text>
+              </View>
+            ) : (
+              <Text className="text-white font-bold text-lg">Consultar Cod.</Text>
+            )}
           </TouchableOpacity>
         </View>
 

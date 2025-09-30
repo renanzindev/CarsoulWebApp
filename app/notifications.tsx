@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { DashboardHeader } from '@/components/DashboardHeader';
-import { ProfileCard } from '@/components/ProfileCard';
-import { useUserProfile } from '@/contexts/UserProfileContext';
-import { SwipeBackWrapper } from '@/components/SwipeBackWrapper';
-import { SlidingSidebar } from '@/components/SlidingSidebar';
+import { useRouter } from 'expo-router';
+import { DashboardHeader } from '../components/DashboardHeader';
+import { ProfileCard } from '../components/ProfileCard';
+import { useUserProfile } from '../contexts/UserProfileContext';
+import { SwipeBackWrapper } from '../components/SwipeBackWrapper';
+import { SlidingSidebar } from '../components/SlidingSidebar';
 
 interface NotificationItem {
   id: string;
@@ -21,6 +22,12 @@ interface NotificationsByDate {
 
 export default function NotificationsScreen() {
   const { userProfile } = useUserProfile();
+  const router = useRouter();
+
+  // Função para navegar para a tela de perfil
+  const handleProfilePress = () => {
+    router.push('/profile');
+  };
 
   const notificationData: NotificationsByDate[] = [
     {
@@ -84,6 +91,7 @@ export default function NotificationsScreen() {
             variant="default"
             backgroundColor="bg-slate-700"
             textColor="text-white"
+            onPress={handleProfilePress}
           />
         </View>
         

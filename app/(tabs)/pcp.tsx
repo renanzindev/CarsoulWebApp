@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { DashboardHeader } from '@/components/DashboardHeader';
-import { ProfileCard, ProfileCardUtils } from '@/components/ProfileCard';
-import { useUserProfile } from '@/contexts/UserProfileContext';
-import { SwipeBackWrapper } from '@/components/SwipeBackWrapper';
-import { SlidingSidebar } from '@/components/SlidingSidebar';
+import { useRouter } from 'expo-router';
+import { DashboardHeader } from '../../components/DashboardHeader';
+import { ProfileCard, ProfileCardUtils } from '../../components/ProfileCard';
+import { useUserProfile } from '../../contexts/UserProfileContext';
+import { SwipeBackWrapper } from '../../components/SwipeBackWrapper';
+import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 interface Agendamento {
   id: string;
@@ -26,6 +27,12 @@ interface Agendamento {
 export default function PCPScreen() {
   const [filtroAtivo, setFiltroAtivo] = useState<'semana' | 'dia'>('dia');
   const { profileData, isLoading } = useUserProfile();
+  const router = useRouter();
+
+  // Função para navegar para a tela de perfil
+  const handleProfilePress = () => {
+    router.push('/profile');
+  };
 
   // Mostrar loading enquanto carrega os dados
   if (isLoading) {
@@ -160,6 +167,7 @@ export default function PCPScreen() {
             motivationText={profileData.profile.motivationText}
             variant={profileData.profile.variant as any}
             showDivider={profileData.profile.showDivider}
+            onPress={handleProfilePress}
           />
         </View>
         

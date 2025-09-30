@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { SwipeBackWrapper } from '@/components/SwipeBackWrapper';
-import { SlidingSidebar } from '@/components/SlidingSidebar';
+import { SwipeBackWrapper } from '../../components/SwipeBackWrapper';
+import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 /**
  * Tela de Conquistas

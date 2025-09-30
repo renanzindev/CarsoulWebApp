@@ -2,12 +2,13 @@ import React from 'react';
 import { View } from 'react-native';
 
 // Importações dos componentes das telas
-import { NotificationsSection } from '@/components/NotificationsSection';
-import { PerformanceSection } from '@/components/PerformanceSection';
-import { PostNotificationCards } from '@/components/PostNotificationCards';
-import { QuickAccessCards } from '@/components/QuickAccessCards';
-import { ContactsSection } from '@/components/ContactsSection';
-import { OSClosureScreen } from '@/components/OSClosureScreen';
+import { NotificationsSection } from '../components/NotificationsSection';
+import { PerformanceSection } from '../components/PerformanceSection';
+import { PostNotificationCards } from '../components/PostNotificationCards';
+import { QuickAccessCards } from '../components/QuickAccessCards';
+import { ContactsSection } from '../components/ContactsSection';
+import { OSClosureScreen } from '../components/OSClosureScreen';
+import ProfileScreen from '../components/ProfileScreen';
 
 /**
  * Interface para definir a configuração de uma página
@@ -84,6 +85,14 @@ export const ROUTES_CONFIG: Record<string, PageConfig> = {
     title: 'Fechamento de OS',
     description: 'Tela para fechamento de ordens de serviço',
     ...DEFAULT_CONFIGS.standard
+  },
+
+  // Página de perfil do usuário
+  'profile': {
+    component: ProfileScreen,
+    title: 'Perfil',
+    description: 'Informações detalhadas do perfil do usuário',
+    ...DEFAULT_CONFIGS.fullscreen
   }
 };
 

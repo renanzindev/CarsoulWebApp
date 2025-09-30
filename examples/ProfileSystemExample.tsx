@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
-import { useProfileManager, useUser, useMedals, useUserStats } from '@/hooks/useUserProfileHooks';
+import { useProfileManager, useUser, useMedals, useUserStats } from '../hooks/useUserProfileHooks';
 
 /**
  * Exemplo completo de uso do sistema de perfil via JSON

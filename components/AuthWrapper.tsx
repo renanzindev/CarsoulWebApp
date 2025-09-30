@@ -1,4 +1,4 @@
-import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import React from 'react';
 import { View } from 'react-native';
 import { Login } from './Login';

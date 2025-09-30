@@ -37,7 +37,7 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({
         router.push('/pcp');
         break;
       case 'profile':
-        console.log('Navegando para Perfil');
+        router.push('/profile');
         break;
       case 'reports':
         console.log('Navegando para Relatórios');

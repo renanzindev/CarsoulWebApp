@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 
 // Tipos para melhor tipagem
 export interface Medal {
@@ -18,6 +18,7 @@ export interface ProfileCardProps {
   showDivider?: boolean;
   backgroundColor?: string;
   textColor?: string;
+  onPress?: () => void;
 }
 
 // Dados padrão do componente
@@ -36,7 +37,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   variant = 'default',
   showDivider = true,
   backgroundColor = 'bg-slate-700',
-  textColor = 'text-white'
+  textColor = 'text-white',
+  onPress
 }) => {
   // Função para gerar as iniciais automaticamente
   const generateInitials = (name: string): string => {
@@ -75,7 +77,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const variantStyles = getVariantStyles();
-  return (
+  
+  const CardContent = () => (
     <View className={`${backgroundColor} mt-10 mb-2 rounded-xl mx-1 ${variantStyles.container}`}>
       <View className={`flex-row items-center ${variantStyles.minHeight}`}>
         {/* Lado Esquerdo - Informações do Usuário */}
@@ -122,6 +125,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         )}
       </View>
     </View>
+  );
+
+  return onPress ? (
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+      <CardContent />
+    </TouchableOpacity>
+  ) : (
+    <CardContent />
   );
 };
 

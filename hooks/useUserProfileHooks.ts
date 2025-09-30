@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useUserProfile, type Medal, type User, type UserStats } from '@/contexts/UserProfileContext';
+import { useUserProfile, type Medal, type User, type UserStats } from '../contexts/UserProfileContext';
 
 /**
  * Hook personalizado para gerenciar dados do usuário

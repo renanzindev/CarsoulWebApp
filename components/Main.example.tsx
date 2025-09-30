@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Main, MainUtils } from './Main';
-import { RouteManager, DEFAULT_CONFIGS } from '@/config/routes.config';
+import { RouteManager, DEFAULT_CONFIGS } from '../config/routes.config';
 
 /**
  * Exemplos de uso do componente Main dinâmico

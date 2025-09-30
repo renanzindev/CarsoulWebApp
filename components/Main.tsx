@@ -1,10 +1,10 @@
-import { useSegments } from 'expo-router';
+import { useSegments, useRouter } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
 // Importações do sistema de configuração de rotas
-import { RouteManager, type PageConfig } from '@/config/routes.config';
-import { useUserProfile } from '@/contexts/UserProfileContext';
+import { RouteManager, type PageConfig } from '../config/routes.config';
+import { useUserProfile } from '../contexts/UserProfileContext';
 import { DashboardHeader } from './DashboardHeader';
 import { ProfileCard, ProfileCardUtils } from './ProfileCard';
 
@@ -88,6 +88,12 @@ export const Main: React.FC<MainProps> = ({
   containerProps = {} 
 }) => {
   const { profileData, isLoading } = useUserProfile();
+  const router = useRouter();
+
+  // Função para navegar para a tela de perfil
+  const handleProfilePress = () => {
+    router.push('/profile');
+  };
 
   // Mostrar loading enquanto carrega os dados
   if (isLoading) {
@@ -109,9 +115,9 @@ export const Main: React.FC<MainProps> = ({
   }
 
   // Converter medalhas do JSON para o formato do ProfileCard
-  const profileMedals = profileData.medals.map(medal => 
+  const profileMedals = profileData?.medals?.map(medal => 
     ProfileCardUtils.createMedal(medal.emoji, medal.active, medal.title)
-  );
+  ) || [];
 
   return (
     <View 
@@ -130,12 +136,13 @@ export const Main: React.FC<MainProps> = ({
         {/* ProfileCard fixo - sempre visível no topo */}
         <View className="px-2.5 pt-2.5 pb-0">
           <ProfileCard 
-            userName={profileData.user.userName}
-            userRole={profileData.user.userRole}
+            userName={profileData?.user?.userName || ''}
+            userRole={profileData?.user?.userRole || ''}
             medals={profileMedals}
-            motivationText={profileData.profile.motivationText}
-            variant={profileData.profile.variant as any}
-            showDivider={profileData.profile.showDivider}
+            motivationText={profileData?.profile?.motivationText || ''}
+            variant={profileData?.profile?.variant as any}
+            showDivider={profileData?.profile?.showDivider || false}
+            onPress={handleProfilePress}
           />
         </View>
         
