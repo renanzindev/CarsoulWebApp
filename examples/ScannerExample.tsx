@@ -7,47 +7,18 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
-import { QRCodeScanner } from '../components/QRCodeScanner';
 import { BarcodeScannerSimple } from '../components/BarcodeScannerSimple';
 
 interface ScanResult {
   code: string;
   data: any;
-  type: 'qr' | 'barcode';
+  type: 'barcode';
   timestamp: string;
 }
 
 export const ScannerExample: React.FC = () => {
-  const [qrScannerVisible, setQrScannerVisible] = useState(false);
   const [barcodeScannerVisible, setBarcodeScannerVisible] = useState(false);
   const [scanResults, setScanResults] = useState<ScanResult[]>([]);
-
-  const handleQRCodeScanned = (code: string, data?: any) => {
-    console.log('QR Code escaneado:', { code, data });
-    
-    const result: ScanResult = {
-      code,
-      data,
-      type: 'qr',
-      timestamp: new Date().toLocaleString()
-    };
-    
-    setScanResults(prev => [result, ...prev]);
-    
-    // Exibe informações do resultado
-    if (data) {
-      Alert.alert(
-        'QR Code Processado',
-        `Código: ${code}\nDados recebidos da API com sucesso!`,
-        [{ text: 'OK' }]
-      );
-    } else {
-      Alert.alert(
-        'QR Code Lido',
-        `Código: ${code}\nNenhum dado adicional da API.`,
-        [{ text: 'OK' }]
-      );
-    }
   };
 
   const handleBarcodeScanned = (code: string, data?: any) => {
@@ -93,13 +64,6 @@ export const ScannerExample: React.FC = () => {
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.button, styles.qrButton]}
-          onPress={() => setQrScannerVisible(true)}
-        >
-          <Text style={styles.buttonText}>Escanear QR Code</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
           style={[styles.button, styles.barcodeButton]}
           onPress={() => setBarcodeScannerVisible(true)}
         >
@@ -124,7 +88,7 @@ export const ScannerExample: React.FC = () => {
             <View key={index} style={styles.resultItem}>
               <View style={styles.resultHeader}>
                 <Text style={styles.resultType}>
-                  {result.type === 'qr' ? '📱 QR Code' : '📊 Código de Barras'}
+                  📊 Código de Barras
                 </Text>
                 <Text style={styles.resultTime}>{result.timestamp}</Text>
               </View>
@@ -145,14 +109,6 @@ export const ScannerExample: React.FC = () => {
           ))
         )}
       </ScrollView>
-
-      {/* QR Code Scanner */}
-      <QRCodeScanner
-        visible={qrScannerVisible}
-        onClose={() => setQrScannerVisible(false)}
-        onCodeScanned={handleQRCodeScanned}
-        onError={handleScanError}
-      />
 
       {/* Barcode Scanner */}
       <BarcodeScannerSimple
@@ -189,9 +145,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     marginHorizontal: 5,
-  },
-  qrButton: {
-    backgroundColor: '#3B82F6',
   },
   barcodeButton: {
     backgroundColor: '#10B981',

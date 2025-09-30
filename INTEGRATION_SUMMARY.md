@@ -2,7 +2,7 @@
 
 ## ✅ Implementação Concluída
 
-A integração da API com os componentes de scanner foi **implementada com sucesso**! Agora, quando você escanear qualquer código (QR Code ou código de barras), o sistema automaticamente fará requisições para a API.
+A integração da API com os componentes de scanner foi **implementada com sucesso**! Agora, quando você escanear códigos de barras, o sistema automaticamente fará requisições para a API.
 
 ## 📁 Arquivos Criados/Modificados
 
@@ -14,27 +14,17 @@ A integração da API com os componentes de scanner foi **implementada com suces
 - `READMEs/Scanner.API.Integration.md` - Documentação completa
 
 ### 🔄 Arquivos Modificados:
-- `components/QRCodeScanner.tsx` - Integração com API adicionada
 - `components/BarcodeScannerSimple.tsx` - Integração com API adicionada
 
 ## 🔧 Funcionalidades Implementadas
 
 ### 1. **ScannerService** - Serviço Principal
-- ✅ `processQRCode(qrCode)` - Processa QR Code na API
 - ✅ `processBarcode(barcode)` - Processa código de barras na API
 - ✅ `getProductByBarcode(barcode)` - Busca produto por código
-- ✅ `getInfoByQRCode(qrCode)` - Busca informações por QR Code
 - ✅ `logScan(type, code, action)` - Registra escaneamento
 - ✅ `validateCode(code, type)` - Valida código escaneado
 
-### 2. **QRCodeScanner** - Componente Atualizado
-- ✅ Integração automática com API ao escanear
-- ✅ Indicador de carregamento durante processamento
-- ✅ Tratamento robusto de erros
-- ✅ Callback com dados da API
-- ✅ Fallback para métodos alternativos
-
-### 3. **BarcodeScannerSimple** - Componente Atualizado
+### 2. **BarcodeScannerSimple** - Componente Atualizado
 - ✅ Integração automática com API ao escanear
 - ✅ Indicador de carregamento durante processamento
 - ✅ Tratamento robusto de erros
@@ -42,15 +32,6 @@ A integração da API com os componentes de scanner foi **implementada com suces
 - ✅ Fallback para métodos alternativos
 
 ## 🔄 Fluxo de Funcionamento
-
-### QR Code Scanner:
-```
-1. Usuário escaneia QR Code
-2. Sistema registra o escaneamento (log)
-3. Tenta processar via API (processQRCode)
-4. Se falhar, tenta buscar informações (getInfoByQRCode)
-5. Retorna código + dados (se houver) via callback
-```
 
 ### Barcode Scanner:
 ```
@@ -65,17 +46,17 @@ A integração da API com os componentes de scanner foi **implementada com suces
 
 ### Uso Básico:
 ```tsx
-import { QRCodeScanner } from '../components/QRCodeScanner';
+import { BarcodeScannerSimple } from '../components/BarcodeScannerSimple';
 
-const handleQRScanned = (code: string, data?: any) => {
+const handleBarcodeScanned = (code: string, data?: any) => {
   console.log('Código:', code);
   console.log('Dados da API:', data);
 };
 
-<QRCodeScanner
+<BarcodeScannerSimple
   visible={scannerVisible}
   onClose={() => setScannerVisible(false)}
-  onCodeScanned={handleQRScanned}
+  onCodeScanned={handleBarcodeScanned}
   onError={(error) => console.log(error)}
 />
 ```
@@ -90,10 +71,8 @@ const handleQRScanned = (code: string, data?: any) => {
 Os seguintes endpoints são utilizados:
 
 ```
-POST /{moduleIndex}/scanner/qr-code/process
 POST /{moduleIndex}/scanner/barcode/process
 GET /{moduleIndex}/produtos/buscar-por-codigo/{barcode}
-GET /{moduleIndex}/qr-code/buscar-informacoes/{qrCode}
 POST /{moduleIndex}/scanner/log
 POST /{moduleIndex}/scanner/validate
 ```

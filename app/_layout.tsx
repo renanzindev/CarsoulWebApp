@@ -8,6 +8,7 @@ import '../global.css';
 import { useColorScheme } from '../hooks/useColorScheme';
 import { AuthWrapper } from '../components/AuthWrapper';
 import { UserProfileProvider } from '../contexts/UserProfileContext';
+import { ThemeProvider as CustomThemeProvider } from '../contexts/ThemeContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -21,22 +22,24 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <UserProfileProvider>
-        <AuthWrapper>
-          <Stack
-            screenOptions={{
-              gestureEnabled: true,
-              gestureDirection: 'horizontal',
-            }}
-          >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="notifications" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </AuthWrapper>
-      </UserProfileProvider>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <CustomThemeProvider>
+      <ThemeProvider value={DefaultTheme}>
+        <UserProfileProvider>
+          <AuthWrapper>
+            <Stack
+              screenOptions={{
+                gestureEnabled: true,
+                gestureDirection: 'horizontal',
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="notifications" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </AuthWrapper>
+        </UserProfileProvider>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </CustomThemeProvider>
   );
 }

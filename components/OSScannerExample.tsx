@@ -185,6 +185,7 @@ export const OSScannerExample: React.FC = () => {
           <View className="bg-white p-4 border-b border-gray-200">
             <View className="flex-row items-center justify-between">
               <Text className="text-lg font-bold text-gray-800">
+                
                 Fechamento de OS
               </Text>
               <TouchableOpacity

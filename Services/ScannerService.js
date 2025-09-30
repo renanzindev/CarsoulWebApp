@@ -5,25 +5,6 @@ let moduleIndex = '';
 const v3 = true;
 
 const ScannerService = {
-  // Processa código QR escaneado
-  processQRCode: async (qrCode) => {
-    try {
-      await Utils.defaultModuleIndex(v3).then((result) => {
-        moduleIndex = result;
-      });
-
-      const result = await Api.post(
-        `${moduleIndex}/scanner/qr-code/process`,
-        { qr_code: qrCode }
-      );
-
-      return [result.ok, result.data];
-    } catch (error) {
-      console.error('Erro ao processar QR Code:', error);
-      return [false, error];
-    }
-  },
-
   // Processa código de barras escaneado
   processBarcode: async (barcode) => {
     try {
@@ -32,8 +13,8 @@ const ScannerService = {
       });
 
       const result = await Api.post(
-        `${moduleIndex}/scanner/barcode/process`,
-        { barcode: barcode }
+        `/producao/prefechamento/consultar/codigo`,
+        { codigo_servico: barcode }
       );
 
       return [result.ok, result.data];
@@ -61,24 +42,6 @@ const ScannerService = {
     }
   },
 
-  // Busca informações por QR Code
-  getInfoByQRCode: async (qrCode) => {
-    try {
-      await Utils.defaultModuleIndex(v3).then((result) => {
-        moduleIndex = result;
-      });
-
-      const result = await Api.get(
-        `${moduleIndex}/qr-code/buscar-informacoes/${encodeURIComponent(qrCode)}`
-      );
-
-      return [result.ok, result.data];
-    } catch (error) {
-      console.error('Erro ao buscar informações por QR Code:', error);
-      return [false, error];
-    }
-  },
-
   // Registra escaneamento para auditoria
   logScan: async (type, code, action = 'scan') => {
     try {
@@ -89,7 +52,7 @@ const ScannerService = {
       const result = await Api.post(
         `${moduleIndex}/scanner/log`,
         { 
-          type: type, // 'qr' ou 'barcode'
+          type: type, // 'barcode'
           code: code,
           action: action,
           timestamp: new Date().toISOString()

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView, Modal } from 'react-native';
-import { QRCodeScanner } from '../components/QRCodeScanner';
 import { BarcodeScannerSimple } from '../components/BarcodeScannerSimple';
 import { ScannerIntegrationTest } from '../tests/ScannerIntegrationTest';
 
 interface ScanResult {
   id: string;
-  type: 'qr_code' | 'barcode';
+  type: 'barcode';
   code: string;
   data?: any;
   timestamp: Date;
@@ -17,37 +16,9 @@ interface ScanResult {
  * Demonstra como implementar escaneamento com histórico e tratamento de dados
  */
 export const ScannerUsageExample: React.FC = () => {
-  const [qrScannerVisible, setQrScannerVisible] = useState(false);
   const [barcodeScannerVisible, setBarcodeScannerVisible] = useState(false);
   const [testModalVisible, setTestModalVisible] = useState(false);
   const [scanHistory, setScanHistory] = useState<ScanResult[]>([]);
-
-  // Manipulador para QR Code escaneado
-  const handleQRCodeScanned = (code: string, data?: any) => {
-    const scanResult: ScanResult = {
-      id: Date.now().toString(),
-      type: 'qr_code',
-      code,
-      data,
-      timestamp: new Date()
-    };
-
-    setScanHistory(prev => [scanResult, ...prev]);
-    setQrScannerVisible(false);
-
-    if (data) {
-      Alert.alert(
-        'QR Code Processado',
-        `Código: ${code}\n\nDados da API recebidos com sucesso!`,
-        [
-          { text: 'Ver Detalhes', onPress: () => showScanDetails(scanResult) },
-          { text: 'OK' }
-        ]
-      );
-    } else {
-      Alert.alert(
-        'QR Code Lido',
-        `Código: ${code}\n\nCódigo lido, mas sem dados da API.`,
         [{ text: 'OK' }]
       );
     }
@@ -97,7 +68,7 @@ export const ScannerUsageExample: React.FC = () => {
 
     Alert.alert(
       'Detalhes do Escaneamento',
-      `Tipo: ${scanResult.type === 'qr_code' ? 'QR Code' : 'Código de Barras'}\n` +
+      `Tipo: Código de Barras\n` +
       `Código: ${scanResult.code}\n` +
       `Data: ${scanResult.timestamp.toLocaleString('pt-BR')}\n\n` +
       `Dados da API:\n${details}`,
@@ -131,7 +102,7 @@ export const ScannerUsageExample: React.FC = () => {
       <View className="flex-row justify-between items-start">
         <View className="flex-1">
           <Text className="font-semibold text-gray-800">
-            {item.type === 'qr_code' ? '📱 QR Code' : '📊 Código de Barras'}
+            📊 Código de Barras
           </Text>
           <Text className="text-gray-600 mt-1" numberOfLines={1}>
             {item.code}
@@ -173,19 +144,10 @@ export const ScannerUsageExample: React.FC = () => {
 
       {/* Botões de ação */}
       <View className="p-4">
-        <View className="flex-row gap-3 mb-4">
-          <TouchableOpacity
-            onPress={() => setQrScannerVisible(true)}
-            className="flex-1 bg-blue-500 p-4 rounded-lg"
-          >
-            <Text className="text-white text-center font-semibold">
-              📱 Escanear QR Code
-            </Text>
-          </TouchableOpacity>
-
+        <View className="mb-4">
           <TouchableOpacity
             onPress={() => setBarcodeScannerVisible(true)}
-            className="flex-1 bg-green-500 p-4 rounded-lg"
+            className="bg-green-500 p-4 rounded-lg"
           >
             <Text className="text-white text-center font-semibold">
               📊 Escanear Código de Barras
@@ -241,15 +203,7 @@ export const ScannerUsageExample: React.FC = () => {
         </ScrollView>
       </View>
 
-      {/* QR Code Scanner Modal */}
-      <QRCodeScanner
-        visible={qrScannerVisible}
-        onClose={() => setQrScannerVisible(false)}
-        onCodeScanned={handleQRCodeScanned}
-        onError={handleScanError}
-      />
-
-      {/* Barcode Scanner Modal */}
+      {/* Barcode Scanner */}
       <BarcodeScannerSimple
         visible={barcodeScannerVisible}
         onClose={() => setBarcodeScannerVisible(false)}

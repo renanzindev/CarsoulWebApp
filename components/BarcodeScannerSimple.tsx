@@ -43,38 +43,48 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
     
     setScanned(true);
     setIsProcessing(true);
-    console.log('Código de barras escaneado:', data);
+    
+    console.log('=== CÓDIGO ESCANEADO ===');
+    console.log('Tipo:', type);
+    console.log('Dados:', data);
+    console.log('Comprimento:', data?.length);
+    console.log('Caracteres especiais:', /[^a-zA-Z0-9]/.test(data));
     
     try {
       // Registra o escaneamento para auditoria
-      await ScannerService.logScan('barcode', data, 'scan');
+      console.log('Registrando escaneamento...');
+      const [logSuccess, logResult] = await ScannerService.logScan('barcode', data, 'scan');
+      console.log('Log resultado:', logSuccess ? 'Sucesso' : 'Falha', logResult);
       
       // Processa o código de barras na API
+      console.log('Processando código de barras...');
       const [success, result] = await ScannerService.processBarcode(data);
+      console.log('Processamento resultado:', success ? 'Sucesso' : 'Falha', result);
       
       if (success) {
-        console.log('Código de barras processado com sucesso:', result);
+        console.log('✅ Código de barras processado com sucesso:', result);
         onCodeScanned(data, result);
         onClose();
       } else {
-        console.error('Erro ao processar código de barras:', result);
+        console.log('⚠️ Falha no processamento, tentando buscar produto...');
         
         // Tenta buscar produto por código de barras
         const [productSuccess, productResult] = await ScannerService.getProductByBarcode(data);
+        console.log('Busca de produto resultado:', productSuccess ? 'Sucesso' : 'Falha', productResult);
         
         if (productSuccess) {
-          console.log('Produto encontrado:', productResult);
+          console.log('✅ Produto encontrado:', productResult);
           onCodeScanned(data, productResult);
           onClose();
         } else {
           // Se não conseguir processar, ainda assim retorna o código
-          const errorMessage = 'Não foi possível processar o código de barras na API, mas o código foi lido com sucesso.';
-          console.warn(errorMessage);
+          const errorMessage = `Código lido: ${data}\n\nNão foi possível processar na API.\n\nDetalhes:\n- Processamento: ${success ? 'OK' : 'Falha'}\n- Busca produto: ${productSuccess ? 'OK' : 'Falha'}`;
+          console.warn('⚠️ Nenhuma API funcionou, retornando código bruto');
           
           if (onError) {
             onError(errorMessage);
           } else {
-            Alert.alert('Aviso', errorMessage);
+            Alert.alert('Código Lido', errorMessage + '\n\nO código será enviado mesmo assim.');
           }
           
           onCodeScanned(data, null);
@@ -82,19 +92,24 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
         }
       }
     } catch (error) {
-      console.error('Erro ao processar código de barras:', error);
-      const errorMessage = 'Erro ao conectar com a API. Código lido: ' + data;
+      console.error('=== ERRO NO SCANNER ===');
+      console.error('Erro completo:', error);
+      console.error('Stack trace:', error.stack);
+      
+      const errorMessage = `Erro ao processar código: ${data}\n\nDetalhes do erro:\n${error.message || error}\n\nO código será enviado mesmo assim.`;
       
       if (onError) {
         onError(errorMessage);
       } else {
-        Alert.alert('Erro', errorMessage);
+        Alert.alert('Erro no Scanner', errorMessage);
       }
       
+      // Sempre retorna o código, mesmo com erro
       onCodeScanned(data, null);
       onClose();
     } finally {
       setIsProcessing(false);
+      console.log('=== FIM DO PROCESSAMENTO ===');
       
       setTimeout(() => {
         setScanned(false);

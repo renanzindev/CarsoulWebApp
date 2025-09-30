@@ -18,27 +18,7 @@ export const ScannerIntegrationTest: React.FC = () => {
     setTestResults([]);
   };
 
-  // Teste de processamento de QR Code
-  const testQRCodeProcessing = async () => {
-    setIsLoading(true);
-    addResult('🔄 Testando processamento de QR Code...');
-    
-    try {
-      const testQRCode = 'TEST_QR_CODE_123';
-      const result = await ScannerService.processQRCode(testQRCode);
-      
-      if (result) {
-        addResult('✅ QR Code processado com sucesso');
-        addResult(`📄 Dados: ${JSON.stringify(result, null, 2)}`);
-      } else {
-        addResult('⚠️ QR Code processado, mas sem dados retornados');
-      }
-    } catch (error) {
-      addResult(`❌ Erro no processamento de QR Code: ${error}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   // Teste de processamento de código de barras
   const testBarcodeProcessing = async () => {
@@ -84,27 +64,7 @@ export const ScannerIntegrationTest: React.FC = () => {
     }
   };
 
-  // Teste de busca de informações por QR Code
-  const testQRCodeInfo = async () => {
-    setIsLoading(true);
-    addResult('🔄 Testando busca de informações por QR Code...');
-    
-    try {
-      const testQRCode = 'TEST_QR_INFO_456';
-      const result = await ScannerService.getInfoByQRCode(testQRCode);
-      
-      if (result) {
-        addResult('✅ Informações encontradas com sucesso');
-        addResult(`📋 Info: ${JSON.stringify(result, null, 2)}`);
-      } else {
-        addResult('⚠️ Nenhuma informação encontrada para o QR Code');
-      }
-    } catch (error) {
-      addResult(`❌ Erro na busca de informações: ${error}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
 
   // Teste de log de escaneamento
   const testScanLogging = async () => {
@@ -112,7 +72,7 @@ export const ScannerIntegrationTest: React.FC = () => {
     addResult('🔄 Testando log de escaneamento...');
     
     try {
-      await ScannerService.logScan('qr_code', 'TEST_LOG_789', 'test_scan');
+      await ScannerService.logScan('barcode', 'TEST_LOG_789', 'test_scan');
       addResult('✅ Log de escaneamento registrado com sucesso');
     } catch (error) {
       addResult(`❌ Erro no log de escaneamento: ${error}`);
@@ -128,7 +88,7 @@ export const ScannerIntegrationTest: React.FC = () => {
     
     try {
       const testCode = 'VALID_CODE_123';
-      const result = await ScannerService.validateCode(testCode, 'qr_code');
+      const result = await ScannerService.validateCode(testCode, 'barcode');
       
       if (result) {
         addResult('✅ Código validado com sucesso');
@@ -148,16 +108,10 @@ export const ScannerIntegrationTest: React.FC = () => {
     clearResults();
     addResult('🚀 Iniciando testes completos da integração...');
     
-    await testQRCodeProcessing();
+    await testBarcodeProcessing();
     await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa entre testes
     
-    await testBarcodeProcessing();
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
     await testProductSearch();
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    await testQRCodeInfo();
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     await testScanLogging();
@@ -188,14 +142,6 @@ export const ScannerIntegrationTest: React.FC = () => {
 
         <View className="flex-row flex-wrap gap-2">
           <TouchableOpacity
-            onPress={testQRCodeProcessing}
-            disabled={isLoading}
-            className={`bg-green-500 p-3 rounded-lg flex-1 ${isLoading ? 'opacity-50' : ''}`}
-          >
-            <Text className="text-white text-center text-sm">QR Code</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
             onPress={testBarcodeProcessing}
             disabled={isLoading}
             className={`bg-orange-500 p-3 rounded-lg flex-1 ${isLoading ? 'opacity-50' : ''}`}
@@ -209,14 +155,6 @@ export const ScannerIntegrationTest: React.FC = () => {
             className={`bg-purple-500 p-3 rounded-lg flex-1 ${isLoading ? 'opacity-50' : ''}`}
           >
             <Text className="text-white text-center text-sm">Produto</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={testQRCodeInfo}
-            disabled={isLoading}
-            className={`bg-indigo-500 p-3 rounded-lg flex-1 ${isLoading ? 'opacity-50' : ''}`}
-          >
-            <Text className="text-white text-center text-sm">Info QR</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

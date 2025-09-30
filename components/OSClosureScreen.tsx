@@ -60,58 +60,78 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
     setOsInfo(null);
     
     try {
-      // Log do escaneamento
-      await ScannerService.logScan('barcode', code, 'os_search');
+      console.log('=== INICIANDO BUSCA DA OS ===');
+      console.log('Código recebido:', code);
+      console.log('Tipo do código:', typeof code);
+      console.log('Comprimento do código:', code?.length);
       
-      // Buscar OS por código
+      // Registra o escaneamento
+      console.log('Registrando escaneamento...');
+      const [logSuccess, logResult] = await ScannerService.logScan('barcode', code, 'os_search');
+      console.log('Log do escaneamento:', logSuccess ? 'Sucesso' : 'Falha', logResult);
+      
+      // Busca informações da OS
+      console.log('Buscando informações da OS...');
       const [success, data] = await ScannerService.getOSByCode(code);
       
+      console.log('=== RESULTADO DA BUSCA ===');
+      console.log('Sucesso:', success);
+      console.log('Dados retornados:', data);
+      console.log('Tipo dos dados:', typeof data);
+      
       if (success && data) {
-        // Mapear dados da API para o formato esperado
-        setOsInfo({
-          numero: data.numero || `OS-${code}`,
-          servico: data.servico || data.descricao || 'Serviço não especificado',
-          modelo: data.modelo || data.veiculo || 'Modelo não informado',
-          concessionaria: data.concessionaria || data.local || 'Local não informado',
-          status: data.status || 'PENDENTE',
-          dataAbertura: data.dataAbertura || data.data_abertura || new Date().toLocaleDateString('pt-BR')
-        });
+        console.log('OS encontrada com sucesso!');
+        console.log('Estrutura dos dados:', Object.keys(data));
+        
+        // Verifica se os dados têm a estrutura esperada
+        const osData = {
+          numero: data.numero || data.id || data.codigo || code,
+          servico: data.servico || data.descricao || data.service || 'Serviço não informado',
+          modelo: data.modelo || data.model || data.veiculo || 'Modelo não informado',
+          concessionaria: data.concessionaria || data.local || data.location || 'Local não informado',
+          status: data.status || data.situacao || 'ATIVO',
+          dataAbertura: data.dataAbertura || data.data_abertura || data.created_at || new Date().toLocaleDateString('pt-BR')
+        };
+        
+        console.log('Dados formatados para exibição:', osData);
+        setOsInfo(osData);
       } else {
-        // Se não encontrou na API, mostrar dados genéricos
-        setOsInfo({
-          numero: `OS-${code}`,
-          servico: 'OS não encontrada',
-          modelo: 'Código escaneado: ' + code,
-          concessionaria: 'Verificar código',
-          status: 'NÃO ENCONTRADA',
-          dataAbertura: new Date().toLocaleDateString('pt-BR')
-        });
+        console.log('=== OS NÃO ENCONTRADA ===');
+        console.log('Success:', success);
+        console.log('Data:', data);
         
         Alert.alert(
           'OS não encontrada',
-          `Não foi possível encontrar uma OS com o código: ${code}`,
+          `Não foi possível encontrar uma OS com o código: ${code}\n\nDetalhes técnicos:\n- Sucesso da API: ${success}\n- Dados retornados: ${JSON.stringify(data)}`,
           [{ text: 'OK' }]
         );
+        
+        // Limpa os dados da OS
+        setOsInfo(null);
       }
     } catch (error) {
-      console.error('Erro ao buscar OS:', error);
+      console.error('=== ERRO NA BUSCA DA OS ===');
+      console.error('Erro completo:', error);
+      console.error('Stack trace:', error.stack);
+      
       Alert.alert(
-        'Erro',
-        'Ocorreu um erro ao buscar a OS. Verifique sua conexão e tente novamente.',
+        'Erro na consulta',
+        `Ocorreu um erro ao buscar a OS.\n\nCódigo: ${code}\nErro: ${error.message || error}\n\nVerifique sua conexão e tente novamente.`,
         [{ text: 'OK' }]
       );
       
-      // Mostrar dados de erro
+      // Mostrar dados de erro para debug
       setOsInfo({
         numero: `ERRO-${code}`,
-        servico: 'Erro na consulta',
-        modelo: 'Verifique a conexão',
-        concessionaria: 'Tente novamente',
+        servico: `Erro: ${error.message || 'Erro desconhecido'}`,
+        modelo: 'Verifique a conexão com a API',
+        concessionaria: 'Tente novamente em alguns instantes',
         status: 'ERRO',
         dataAbertura: new Date().toLocaleDateString('pt-BR')
       });
     } finally {
       setIsLoading(false);
+      console.log('=== FIM DA BUSCA DA OS ===');
     }
   };
 
@@ -151,6 +171,42 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
     await fetchOSInfo(searchCode);
   };
 
+  const testApiConnection = async () => {
+    console.log('=== TESTE DE CONEXÃO DA API ===');
+    try {
+      // Testa se o moduleIndex está sendo obtido corretamente
+      const Utils = require('../config/Utils').default;
+      const moduleIndex = await Utils.defaultModuleIndex();
+      const moduleIndexV3 = await Utils.defaultModuleIndex(true);
+      
+      console.log('Module Index (v1):', moduleIndex);
+      console.log('Module Index (v3):', moduleIndexV3);
+      
+      // Testa se o token está presente
+      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
+      const token = await AsyncStorage.getItem('@smartApp:token');
+      const module = await AsyncStorage.getItem('@smartApp:module');
+      
+      console.log('Token presente:', !!token);
+      console.log('Module presente:', !!module);
+      console.log('Module data:', module);
+      
+      // Testa uma chamada simples da API
+      const Api = require('../config/Api').default;
+      console.log('Base URL da API:', Api.getBaseURL());
+      
+      Alert.alert(
+        'Teste da API',
+        `Module Index: ${moduleIndex}\nModule Index V3: ${moduleIndexV3}\nToken: ${token ? 'Presente' : 'Ausente'}\nModule: ${module ? 'Presente' : 'Ausente'}\nBase URL: ${Api.getBaseURL()}`,
+        [{ text: 'OK' }]
+      );
+      
+    } catch (error) {
+      console.error('Erro no teste da API:', error);
+      Alert.alert('Erro no Teste', `Erro: ${error.message}`);
+    }
+  };
+
   return (
     <View className="flex-1 bg-gray-100">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -173,7 +229,7 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
           </View>
           
           <TouchableOpacity 
-            className={`${isLoading ? 'bg-gray-400' : 'bg-green-500'} rounded-xl py-4 px-6 items-center active:bg-green-600`}
+            className={`${isLoading ? 'bg-gray-400' : 'bg-green-500'} rounded-xl py-4 px-6 items-center active:bg-green-600 mb-3`}
             onPress={handleSearch}
             disabled={isLoading}
             style={{ shadowColor: '#22c55e', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 }}
@@ -186,6 +242,15 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
             ) : (
               <Text className="text-white font-bold text-lg">Consultar Cod.</Text>
             )}
+          </TouchableOpacity>
+          
+          {/* Botão de Teste da API */}
+          <TouchableOpacity 
+            className="bg-blue-500 rounded-xl py-3 px-6 items-center active:bg-blue-600"
+            onPress={testApiConnection}
+            style={{ shadowColor: '#3b82f6', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4, elevation: 3 }}
+          >
+            <Text className="text-white font-bold text-base">🔧 Testar API</Text>
           </TouchableOpacity>
         </View>
 

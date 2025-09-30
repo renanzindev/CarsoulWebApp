@@ -4,10 +4,7 @@ Este documento explica como usar os componentes de scanner integrados com a API 
 
 ## Componentes Disponíveis
 
-### 1. QRCodeScanner
-Componente para escaneamento de códigos QR com integração automática à API.
-
-### 2. BarcodeScannerSimple
+### BarcodeScannerSimple
 Componente para escaneamento de códigos de barras com integração automática à API.
 
 ## Serviço ScannerService
@@ -16,33 +13,31 @@ O `ScannerService` foi criado para centralizar todas as operações relacionadas
 
 ### Métodos Disponíveis:
 
-- `processQRCode(qrCode)` - Processa um QR Code na API
 - `processBarcode(barcode)` - Processa um código de barras na API
 - `getProductByBarcode(barcode)` - Busca produto por código de barras
-- `getInfoByQRCode(qrCode)` - Busca informações por QR Code
 - `logScan(type, code, action)` - Registra escaneamento para auditoria
 - `validateCode(code, type)` - Valida código escaneado
 
 ## Como Usar
 
-### Exemplo Básico - QR Code Scanner
+### Exemplo Básico - Barcode Scanner
 
 ```tsx
-import { QRCodeScanner } from '../components/QRCodeScanner';
+import { BarcodeScannerSimple } from '../components/BarcodeScannerSimple';
 
 const MyComponent = () => {
   const [scannerVisible, setScannerVisible] = useState(false);
 
-  const handleQRCodeScanned = (code: string, data?: any) => {
+  const handleBarcodeScanned = (code: string, data?: any) => {
     console.log('Código escaneado:', code);
     console.log('Dados da API:', data);
     
     if (data) {
       // Código foi processado com sucesso na API
-      Alert.alert('Sucesso', 'QR Code processado com sucesso!');
+      Alert.alert('Sucesso', 'Código de barras processado com sucesso!');
     } else {
       // Código foi lido mas não processado na API
-      Alert.alert('Aviso', 'QR Code lido, mas sem dados da API');
+      Alert.alert('Aviso', 'Código de barras lido, mas sem dados da API');
     }
   };
 
@@ -53,13 +48,13 @@ const MyComponent = () => {
   return (
     <View>
       <TouchableOpacity onPress={() => setScannerVisible(true)}>
-        <Text>Escanear QR Code</Text>
+        <Text>Escanear Código de Barras</Text>
       </TouchableOpacity>
 
-      <QRCodeScanner
+      <BarcodeScannerSimple
         visible={scannerVisible}
         onClose={() => setScannerVisible(false)}
-        onCodeScanned={handleQRCodeScanned}
+        onCodeScanned={handleBarcodeScanned}
         onError={handleError}
       />
     </View>
@@ -106,13 +101,6 @@ const MyComponent = () => {
 
 ## Fluxo de Funcionamento
 
-### QR Code Scanner:
-1. Usuário escaneia QR Code
-2. Componente registra o escaneamento (`ScannerService.logScan`)
-3. Tenta processar o QR Code (`ScannerService.processQRCode`)
-4. Se falhar, tenta buscar informações (`ScannerService.getInfoByQRCode`)
-5. Retorna o código e dados (se houver) via callback `onCodeScanned`
-
 ### Barcode Scanner:
 1. Usuário escaneia código de barras
 2. Componente registra o escaneamento (`ScannerService.logScan`)
@@ -139,10 +127,8 @@ Os componentes têm tratamento robusto de erros:
 
 Os endpoints da API são configurados no `ScannerService` e seguem o padrão:
 
-- `POST /{moduleIndex}/scanner/qr-code/process`
 - `POST /{moduleIndex}/scanner/barcode/process`
 - `GET /{moduleIndex}/produtos/buscar-por-codigo/{barcode}`
-- `GET /{moduleIndex}/qr-code/buscar-informacoes/{qrCode}`
 - `POST /{moduleIndex}/scanner/log`
 - `POST /{moduleIndex}/scanner/validate`
 
@@ -164,4 +150,4 @@ Veja o arquivo `examples/ScannerExample.tsx` para um exemplo completo de impleme
 2. **Offline**: Se a API estiver indisponível, o código ainda é retornado
 3. **Auditoria**: Todos os escaneamentos são registrados para auditoria
 4. **Performance**: Loading indicators evitam múltiplos escaneamentos simultâneos
-5. **Compatibilidade**: Suporta múltiplos tipos de códigos de barras e QR codes
+5. **Compatibilidade**: Suporta múltiplos tipos de códigos de barras
