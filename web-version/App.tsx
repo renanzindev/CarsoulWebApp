@@ -15,7 +15,7 @@ function App() {
         <DashboardHeader />
         
         {/* Conteúdo principal com margem superior para compensar o header fixo */}
-        <main className="pt-24">
+        <main className="pt-20">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/contacts" element={<Contacts />} />

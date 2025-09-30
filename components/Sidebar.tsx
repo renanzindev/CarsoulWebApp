@@ -46,15 +46,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
       case 'dashboard':
         router.push('/(tabs)');
         break;
-      case 'contacts':
-        router.push('/(tabs)/contacts');
-        break;
-
       case 'conquistas':
         router.push('/(tabs)/conquistas');
-        break;
-      case 'os':
-        router.push('/(tabs)/os');
         break;
       case 'pcp':
         router.push('/(tabs)/pcp');
@@ -69,9 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
 
   const menuItems = [
     { id: 'dashboard', title: 'Dashboard', icon: '⚡', color: '#0a7ea4' },
-    { id: 'contacts', title: 'Contatos Úteis', icon: '👥', color: '#059669' },
     { id: 'conquistas', title: 'Conquistas', icon: '🎯', color: '#dc2626' },
-    { id: 'os', title: 'Fechamento de OS', icon: '📝', color: '#7c3aed' },
     { id: 'pcp', title: 'PCP', icon: '📈', color: '#ea580c' },
     { id: 'logout', title: 'Sair', icon: '🔓', color: '#6b7280' },
   ];
@@ -98,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
          >
           {/* Header com gradiente */}
           <LinearGradient
-            colors={['#0a7ea4', '#0891b2']}
+            colors={['#FFFFFF', '#A6CE38']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             className="pt-20 pb-8 px-6"

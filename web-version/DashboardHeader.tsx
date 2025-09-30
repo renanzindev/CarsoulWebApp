@@ -23,7 +23,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-slate-800 shadow-lg">
       {/* Header Superior */}
-      <div className="flex items-center justify-between px-3 pt-14 pb-3">
+      <div className="flex items-center justify-between px-3 pt-4 pb-3">
         
         {/* Logo no canto esquerdo */}
         <img 

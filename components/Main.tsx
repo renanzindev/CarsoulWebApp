@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
 import { useSegments } from 'expo-router';
+import React from 'react';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
 // Importações do sistema de configuração de rotas
 import { RouteManager, type PageConfig } from '@/config/routes.config';
+import { useUserProfile } from '@/contexts/UserProfileContext';
 import { DashboardHeader } from './DashboardHeader';
 import { ProfileCard, ProfileCardUtils } from './ProfileCard';
-import { useUserProfile } from '@/contexts/UserProfileContext';
 
 /**
  * Props do componente Main

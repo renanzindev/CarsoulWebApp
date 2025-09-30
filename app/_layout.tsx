@@ -24,7 +24,12 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <UserProfileProvider>
         <AuthWrapper>
-          <Stack>
+          <Stack
+            screenOptions={{
+              gestureEnabled: true,
+              gestureDirection: 'horizontal',
+            }}
+          >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="notifications" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />

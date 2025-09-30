@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { ProfileCard } from '@/components/ProfileCard';
 import { useUserProfile } from '@/contexts/UserProfileContext';
+import { SwipeBackWrapper } from '@/components/SwipeBackWrapper';
+import { SlidingSidebar } from '@/components/SlidingSidebar';
 
 interface NotificationItem {
   id: string;
@@ -62,9 +64,11 @@ export default function NotificationsScreen() {
   ];
 
   return (
-    <View style={styles.container}>
-      {/* Header fixo - igual ao da tela home */}
-      <DashboardHeader />
+    <SlidingSidebar>
+      <SwipeBackWrapper>
+      <View style={styles.container}>
+        {/* Header fixo - igual ao da tela home */}
+        <DashboardHeader />
       
       {/* Container principal com scroll para o conteúdo */}
       <ScrollView 
@@ -110,7 +114,9 @@ export default function NotificationsScreen() {
         </View>
         </View>
       </ScrollView>
-    </View>
+      </View>
+    </SwipeBackWrapper>
+    </SlidingSidebar>
   );
 };
 

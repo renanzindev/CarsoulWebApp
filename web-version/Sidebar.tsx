@@ -24,14 +24,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
       case 'dashboard':
         navigate('/');
         break;
-      case 'contacts':
-        navigate('/contacts');
-        break;
       case 'conquistas':
         navigate('/conquistas');
-        break;
-      case 'os':
-        navigate('/os');
         break;
       case 'pcp':
         navigate('/pcp');
@@ -46,9 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
 
   const menuItems = [
     { id: 'dashboard', title: 'Dashboard', icon: '⚡', color: '#0a7ea4' },
-    { id: 'contacts', title: 'Contatos Úteis', icon: '👥', color: '#059669' },
     { id: 'conquistas', title: 'Conquistas', icon: '🎯', color: '#dc2626' },
-    { id: 'os', title: 'Fechamento de OS', icon: '📝', color: '#7c3aed' },
     { id: 'pcp', title: 'PCP', icon: '📈', color: '#ea580c' },
     { id: 'logout', title: 'Sair', icon: '🔓', color: '#6b7280' },
   ];
@@ -56,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
+    <div className="fixed inset-0 z-[60] flex">
       {/* Overlay - 20% */}
       <div 
         className="flex-1 bg-black/20 cursor-pointer" 
