@@ -1,6 +1,5 @@
 import { Main } from '../../components/Main';
 import { SwipeBackWrapper } from '../../components/SwipeBackWrapper';
-import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 /**
  * Tela de Contatos
@@ -8,10 +7,8 @@ import { SlidingSidebar } from '../../components/SlidingSidebar';
  */
 export default function ContactsScreen() {
   return (
-    <SlidingSidebar>
-      <SwipeBackWrapper>
-        <Main />
-      </SwipeBackWrapper>
-    </SlidingSidebar>
+    <SwipeBackWrapper>
+      <Main />
+    </SwipeBackWrapper>
   );
 }

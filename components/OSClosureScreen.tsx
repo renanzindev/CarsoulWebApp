@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { BarcodeScannerSimple } from './BarcodeScannerSimple';
 import ScannerService from '../Services/ScannerService';
+import { BarcodeScannerSimple } from './BarcodeScannerSimple';
 
 interface Launch {
   id: string;
@@ -171,41 +171,7 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
     await fetchOSInfo(searchCode);
   };
 
-  const testApiConnection = async () => {
-    console.log('=== TESTE DE CONEXÃO DA API ===');
-    try {
-      // Testa se o moduleIndex está sendo obtido corretamente
-      const Utils = require('../config/Utils').default;
-      const moduleIndex = await Utils.defaultModuleIndex();
-      const moduleIndexV3 = await Utils.defaultModuleIndex(true);
-      
-      console.log('Module Index (v1):', moduleIndex);
-      console.log('Module Index (v3):', moduleIndexV3);
-      
-      // Testa se o token está presente
-      const AsyncStorage = require('@react-native-async-storage/async-storage').default;
-      const token = await AsyncStorage.getItem('@smartApp:token');
-      const module = await AsyncStorage.getItem('@smartApp:module');
-      
-      console.log('Token presente:', !!token);
-      console.log('Module presente:', !!module);
-      console.log('Module data:', module);
-      
-      // Testa uma chamada simples da API
-      const Api = require('../config/Api').default;
-      console.log('Base URL da API:', Api.getBaseURL());
-      
-      Alert.alert(
-        'Teste da API',
-        `Module Index: ${moduleIndex}\nModule Index V3: ${moduleIndexV3}\nToken: ${token ? 'Presente' : 'Ausente'}\nModule: ${module ? 'Presente' : 'Ausente'}\nBase URL: ${Api.getBaseURL()}`,
-        [{ text: 'OK' }]
-      );
-      
-    } catch (error) {
-      console.error('Erro no teste da API:', error);
-      Alert.alert('Erro no Teste', `Erro: ${error.message}`);
-    }
-  };
+
 
   return (
     <View className="flex-1 bg-gray-100">
@@ -244,14 +210,7 @@ export const OSClosureScreen: React.FC<OSClosureScreenProps> = () => {
             )}
           </TouchableOpacity>
           
-          {/* Botão de Teste da API */}
-          <TouchableOpacity 
-            className="bg-blue-500 rounded-xl py-3 px-6 items-center active:bg-blue-600"
-            onPress={testApiConnection}
-            style={{ shadowColor: '#3b82f6', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4, elevation: 3 }}
-          >
-            <Text className="text-white font-bold text-base">🔧 Testar API</Text>
-          </TouchableOpacity>
+
         </View>
 
         {/* Informações da OS */}

@@ -51,7 +51,7 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({
   };
 
   const getCardClasses = () => {
-    const baseClasses = "bg-white rounded-2xl p-5 items-start shadow-lg border border-gray-200 h-28 justify-center w-28";
+    const baseClasses = "bg-white rounded-2xl p-5 items-start shadow-lg border border-gray-200 h-28 justify-center flex-1";
     
     switch(id) {
       case 'pcp':

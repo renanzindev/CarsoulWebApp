@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { SwipeBackWrapper } from '../../components/SwipeBackWrapper';
-import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 /**
  * Tela de Conquistas
@@ -9,8 +8,7 @@ import { SlidingSidebar } from '../../components/SlidingSidebar';
  */
 export default function ConquistasScreen() {
   return (
-    <SlidingSidebar>
-      <SwipeBackWrapper>
+    <SwipeBackWrapper>
       <ScrollView className="flex-1 bg-gray-100">
       <View className="p-6">
         {/* Header */}
@@ -54,7 +52,6 @@ export default function ConquistasScreen() {
         </View>
       </View>
       </ScrollView>
-      </SwipeBackWrapper>
-    </SlidingSidebar>
+    </SwipeBackWrapper>
   );
 }

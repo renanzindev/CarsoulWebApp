@@ -30,12 +30,30 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
 
   useEffect(() => {
-    if (visible && !permission?.granted) {
-      requestPermission();
+    if (visible) {
+      setScanned(false);
+      setIsProcessing(false);
+      setCameraReady(false);
+      
+      if (!permission?.granted) {
+        requestPermission();
+      }
     }
   }, [visible]);
+
+  useEffect(() => {
+    if (permission?.granted && visible) {
+      // Pequeno delay para garantir que a câmera seja inicializada
+      const timer = setTimeout(() => {
+        setCameraReady(true);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [permission?.granted, visible]);
 
   const handleBarCodeScanned = async ({ type, data }: { type: string; data: string }) => {
     if (scanned || isProcessing) return;
@@ -159,27 +177,35 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
         </View>
 
         {/* Camera */}
-        <CameraView
-          className="flex-1"
-          facing="back"
-          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-          barcodeScannerSettings={{
-            barcodeTypes: [
-              'code128',
-              'code39',
-              'code93',
-              'codabar',
-              'ean13',
-              'ean8',
-              'itf14',
-              'upc_a',
-              'upc_e',
-              'pdf417',
-              'aztec',
-              'datamatrix'
-            ],
-          }}
-        >
+        {cameraReady ? (
+          <CameraView
+            className="flex-1"
+            facing="back"
+            onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+            barcodeScannerSettings={{
+              barcodeTypes: [
+                'code128',
+                'code39',
+                'code93',
+                'codabar',
+                'ean13',
+                'ean8',
+                'itf14',
+                'upc_a',
+                'upc_e',
+                'pdf417',
+                'aztec',
+                'datamatrix'
+              ],
+            }}
+            onCameraReady={() => {
+              console.log('Câmera pronta para uso');
+            }}
+            onMountError={(error) => {
+              console.error('Erro ao montar câmera:', error);
+              Alert.alert('Erro na Câmera', 'Não foi possível inicializar a câmera. Tente novamente.');
+            }}
+          >
           {/* Overlay */}
           <View className="flex-1 justify-center items-center">
             <View className="w-72 h-28 border-2 border-white rounded-lg bg-transparent relative">
@@ -193,13 +219,19 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
             </View>
           </View>
 
-          {/* Instructions */}
-          <View className="absolute bottom-24 left-5 right-5">
-            <Text className="text-white text-center text-base bg-black/70 p-4 rounded-lg">
-              {isProcessing ? 'Processando código...' : 'Posicione o código de barras na área marcada'}
-            </Text>
+            {/* Instructions */}
+            <View className="absolute bottom-24 left-5 right-5">
+              <Text className="text-white text-center text-base bg-black/70 p-4 rounded-lg">
+                {isProcessing ? 'Processando código...' : 'Posicione o código de barras na área marcada'}
+              </Text>
+            </View>
+          </CameraView>
+        ) : (
+          <View className="flex-1 justify-center items-center bg-black">
+            <ActivityIndicator size="large" color="#10B981" />
+            <Text className="text-white mt-4 text-base">Inicializando câmera...</Text>
           </View>
-        </CameraView>
+        )}
       </View>
     </Modal>
   );

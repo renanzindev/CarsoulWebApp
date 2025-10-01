@@ -6,7 +6,6 @@ import { DashboardHeader } from '../../components/DashboardHeader';
 import { ProfileCard, ProfileCardUtils } from '../../components/ProfileCard';
 import { useUserProfile } from '../../contexts/UserProfileContext';
 import { SwipeBackWrapper } from '../../components/SwipeBackWrapper';
-import { SlidingSidebar } from '../../components/SlidingSidebar';
 
 interface Agendamento {
   id: string;
@@ -146,8 +145,7 @@ export default function PCPScreen() {
   };
 
   return (
-    <SlidingSidebar>
-      <SwipeBackWrapper>
+    <SwipeBackWrapper>
       <View className="flex-1 bg-gray-100">
         {/* Header fixo - igual ao da tela home */}
         <DashboardHeader />
@@ -262,7 +260,6 @@ export default function PCPScreen() {
         </View>
       </ScrollView>
       </View>
-      </SwipeBackWrapper>
-    </SlidingSidebar>
+    </SwipeBackWrapper>
   );
 }

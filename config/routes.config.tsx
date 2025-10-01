@@ -8,6 +8,7 @@ import { PostNotificationCards } from '../components/PostNotificationCards';
 import { QuickAccessCards } from '../components/QuickAccessCards';
 import { ContactsSection } from '../components/ContactsSection';
 import { OSClosureScreen } from '../components/OSClosureScreen';
+import { NavigationCards } from '../components/NavigationCards';
 import ProfileScreen from '../components/ProfileScreen';
 
 /**
@@ -36,6 +37,7 @@ const DashboardPage: React.FC = () => (
     <QuickAccessCards />
     <PerformanceSection />
     <NotificationsSection />
+    <NavigationCards />
     <PostNotificationCards />
   </>
 );

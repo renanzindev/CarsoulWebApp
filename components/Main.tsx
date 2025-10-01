@@ -130,6 +130,7 @@ export const Main: React.FC<MainProps> = ({
       {/* Espaçamento mínimo entre header e ProfileCard */}
       <View className="h-8 bg-gray-100" />
       
+      
       {/* ProfileCard fixo - sempre visível abaixo do header */}
       <View className="px-1 pt-1 pb-0 bg-gray-100">
         <ProfileCard 

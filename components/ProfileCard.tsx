@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 // Tipos para melhor tipagem
 export interface Medal {
@@ -79,7 +79,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   const variantStyles = getVariantStyles();
   
   const CardContent = () => (
-    <View className={`${backgroundColor} mt-10 mb-2 rounded-xl mx-1 ${variantStyles.container}`}>
+    <View className={`${backgroundColor} mt-10 mb-2 rounded-xl mx-4 ${variantStyles.container}`}>
       <View className={`flex-row items-center ${variantStyles.minHeight}`}>
         {/* Lado Esquerdo - Informações do Usuário */}
         <View className={`flex-1 ${variantStyles.spacing}`}>

@@ -45,12 +45,7 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
 }) => {
   return (
     <View style={styles.quickAccess}>
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.cardsCarousel}
-        contentContainerStyle={styles.cardsContainer}
-      >
+      <View style={styles.cardsContainer}>
         {cards.map(card => (
           <QuickAccessCard
             key={card.id}
@@ -62,7 +57,7 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
             notificationCount={card.notificationCount}
           />
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -70,12 +65,11 @@ export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
 const styles = StyleSheet.create({
   quickAccess: {
     marginVertical: 0,
-  },
-  cardsCarousel: {
-    flexDirection: 'row',
+    paddingHorizontal: 16,
   },
   cardsContainer: {
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     gap: 12,
   },
 });
