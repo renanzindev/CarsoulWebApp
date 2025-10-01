@@ -88,7 +88,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onClose }) => {
 
 
   return (
-    <View className="flex-1" style={{ backgroundColor: colors.background }}>
+    <View className="flex-1" style={{ backgroundColor: colors.background, paddingBottom: 80 }}>
       {/* Header */}
       <View className="pt-12 pb-6 px-4" style={{ backgroundColor: colors.header }}>
         <View className="flex-row items-center mb-4">
@@ -109,7 +109,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onClose }) => {
         </View>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
         {/* Medalhas */}
         <View className="mx-4 mt-4 rounded-xl p-4 shadow-sm" style={{ backgroundColor: colors.card }}>
           <Text className="text-lg font-bold mb-3" style={{ color: colors.text }}>Conquistas</Text>

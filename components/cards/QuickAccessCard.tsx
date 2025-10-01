@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 interface QuickAccessCardProps {
   id: string;
@@ -50,136 +50,90 @@ export const QuickAccessCard: React.FC<QuickAccessCardProps> = ({
     }
   };
 
-  const cardStyle = id === 'pcp' ? [styles.accessCard, styles.pcpCard] : 
-                    id === 'profile' ? [styles.accessCard, styles.profileCard] :
-                    id === 'reports' ? [styles.accessCard, styles.reportsCard] : styles.accessCard;
+  const getCardClasses = () => {
+    const baseClasses = "bg-white rounded-2xl p-5 items-start shadow-lg border border-gray-200 h-28 justify-center w-28";
+    
+    switch(id) {
+      case 'pcp':
+        return `${baseClasses.replace('bg-white', 'bg-gray-900')}`;
+      case 'profile':
+        return `${baseClasses.replace('bg-white', 'bg-lime-500')}`;
+      case 'reports':
+        return `${baseClasses.replace('bg-white', 'bg-gray-500')}`;
+      case 'contacts':
+        return `${baseClasses.replace('bg-white', 'bg-slate-700')}`;
+      default:
+        return baseClasses;
+    }
+  };
+
+  const getTitleClasses = () => {
+    const baseClasses = "text-xs font-bold mb-1 text-left";
+    
+    switch(id) {
+      case 'pcp':
+      case 'profile':
+      case 'reports':
+      case 'contacts':
+        return `${baseClasses} text-white`;
+      default:
+        return `${baseClasses} text-gray-800`;
+    }
+  };
+
+  const getSubtitleClasses = () => {
+    const baseClasses = "text-sm text-left";
+    
+    switch(id) {
+      case 'pcp':
+        return `${baseClasses} text-gray-300`;
+      case 'profile':
+      case 'reports':
+      case 'contacts':
+        return `${baseClasses} text-white`;
+      default:
+        return `${baseClasses} text-gray-600`;
+    }
+  };
 
   return (
-    <TouchableOpacity style={cardStyle} onPress={handlePress}>
-      {notificationCount && (
-        <View style={styles.notificationBadge}>
-          <Text style={styles.notificationText}>{notificationCount}</Text>
+    <TouchableOpacity className={getCardClasses()} onPress={handlePress}>
+      {notificationCount && notificationCount > 0 && (
+        <View className="absolute top-2 right-2 bg-red-600 rounded-full min-w-5 h-5 justify-center items-center z-10">
+          <Text className="text-white text-xs font-bold">{notificationCount}</Text>
         </View>
       )}
-      <View style={styles.iconContainer}>
+      <View className="mb-2 self-start">
         {id === 'pcp' ? (
           <Image 
             source={require('../../assets/images/iconpcp.png')} 
-            style={styles.iconImage} 
+            className="w-9 h-9"
+            style={{ resizeMode: 'contain' }}
           />
         ) : id === 'profile' ? (
           <Image 
             source={require('../../assets/images/iconeperfil.png')} 
-            style={styles.iconImage} 
+            className="w-9 h-9"
+            style={{ resizeMode: 'contain' }}
           />
         ) : id === 'reports' ? (
           <Image 
             source={require('../../assets/images/iconreturn.png')} 
-            style={styles.iconImage} 
+            className="w-9 h-9"
+            style={{ resizeMode: 'contain' }}
+          />
+        ) : id === 'contacts' ? (
+          <Image 
+            source={require('../../assets/images/iconeContatoUteisFooter.png')} 
+            className="w-9 h-9"
+            style={{ resizeMode: 'contain' }}
           />
         ) : (
-          <Text style={styles.icon}>{icon}</Text>
+          <Text className="text-2xl">{icon}</Text>
         )}
       </View>
-      <Text style={id === 'pcp' ? [styles.title, styles.pcpTitle] : 
-                   id === 'profile' ? [styles.title, styles.profileTitle] :
-                   id === 'reports' ? [styles.title, styles.reportsTitle] : styles.title}>{title}</Text>
-      <Text style={id === 'pcp' ? [styles.subtitle, styles.pcpSubtitle] : 
-                   id === 'profile' ? [styles.subtitle, styles.profileSubtitle] :
-                   id === 'reports' ? [styles.subtitle, styles.reportsSubtitle] : styles.subtitle}>{subtitle}</Text>
+      <Text className={getTitleClasses()}>{title}</Text>
+      <Text className={getSubtitleClasses()}>{subtitle}</Text>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  accessCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'flex-start',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-    height: 110,
-    justifyContent: 'center',
-    width: 110,
-  },
-  notificationBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: '#dc3545',
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  notificationText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  iconContainer: {
-    marginBottom: 8,
-    alignSelf: 'flex-start',
-  },
-  icon: {
-    fontSize: 25,
-  },
-  iconImage: {
-    width: 35,
-    height: 35,
-    resizeMode: 'contain',
-  },
-  pcpCard: {
-    backgroundColor: 'rgba(30, 30, 45, 1)',
-  },
-  pcpTitle: {
-    color: '#ffffff',
-  },
-  pcpSubtitle: {
-    color: '#cccccc',
-  },
-  profileCard: {
-    backgroundColor: 'rgba(166, 206, 56, 1)',
-  },
-  profileTitle: {
-    color: '#ffffff',
-  },
-  profileSubtitle: {
-    color: '#ffffff',
-  },
-  reportsCard: {
-    backgroundColor: 'rgba(128, 128, 143, 1)',
-  },
-  reportsTitle: {
-    color: '#ffffff',
-    flexWrap: 'nowrap',
-  },
-  reportsSubtitle: {
-    color: '#ffffff',
-  },
-  title: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-    textAlign: 'left',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'left',
-  },
-});
-
-// Estilos removidos - agora usando StyleSheet do React Native

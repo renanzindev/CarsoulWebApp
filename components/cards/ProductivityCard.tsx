@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 interface ProductivityCardProps {
   percentage: number;
@@ -11,48 +11,10 @@ export const ProductivityCard: React.FC<ProductivityCardProps> = ({
   target = 90 
 }) => {
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Produtividade</Text>
-      <Text style={styles.value}>{percentage}%</Text>
-      <Text style={styles.subtitle}>Meta: {target}%</Text>
+    <View className="bg-white rounded-xl p-4 shadow-sm items-center border border-gray-200 flex-1 h-28">
+      <Text className="text-base font-semibold text-gray-800 mb-1 text-center">Produtividade</Text>
+      <Text className="text-3xl font-bold text-lime-500 mb-1">{percentage}%</Text>
+      <Text className="text-xs text-gray-600">Meta: {target}%</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    flex: 1,
-    height: 110,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-  value: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#A6CE38',
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 12,
-    color: '#666',
-  },
-});

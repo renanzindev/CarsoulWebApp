@@ -1,12 +1,17 @@
 import React from 'react';
-import { Main } from '../components/Main';
+import { SlidingSidebar } from '../components/SlidingSidebar';
+import { ProfileScreen } from '../components/ProfileScreen';
 
 /**
  * Tela de Perfil do Usuário
  * 
- * Esta tela utiliza o sistema de roteamento configurado em routes.config.tsx
- * O componente ProfileScreen é renderizado através do Main.tsx
+ * Esta tela utiliza o SlidingSidebar para manter a navegação consistente
+ * O componente ProfileScreen é renderizado dentro do SlidingSidebar
  */
-export default function ProfileScreen() {
-  return <Main />;
+export default function ProfilePage() {
+  return (
+    <SlidingSidebar>
+      <ProfileScreen />
+    </SlidingSidebar>
+  );
 }

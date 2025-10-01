@@ -124,28 +124,31 @@ export const Main: React.FC<MainProps> = ({
       className={`flex-1 bg-gray-100 w-full ${className}`.trim()}
       {...containerProps}
     >
-      {/* Header fixo - sempre visível */}
+      {/* Header fixo - sempre visível no topo */}
       <DashboardHeader />
       
-      {/* Container principal com scroll para o conteúdo */}
+      {/* Espaçamento reduzido entre header e ProfileCard */}
+      <View className="h-1 bg-gray-100" />
+      
+      {/* ProfileCard fixo - sempre visível abaixo do header */}
+      <View className="px-2.5 pt-1 pb-0 bg-gray-100">
+        <ProfileCard 
+          userName={profileData?.user?.userName || ''}
+          userRole={profileData?.user?.userRole || ''}
+          medals={profileMedals}
+          motivationText={profileData?.profile?.motivationText || ''}
+          variant={profileData?.profile?.variant as any}
+          showDivider={profileData?.profile?.showDivider || false}
+          onPress={handleProfilePress}
+        />
+      </View>
+      
+      {/* Container principal com scroll apenas para o conteúdo dinâmico */}
       <ScrollView 
         className="flex-1 w-full"
-        contentContainerStyle={{ flexGrow: 1, paddingTop: 20, paddingBottom: 100 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 5, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* ProfileCard fixo - sempre visível no topo */}
-        <View className="px-2.5 pt-2.5 pb-0">
-          <ProfileCard 
-            userName={profileData?.user?.userName || ''}
-            userRole={profileData?.user?.userRole || ''}
-            medals={profileMedals}
-            motivationText={profileData?.profile?.motivationText || ''}
-            variant={profileData?.profile?.variant as any}
-            showDivider={profileData?.profile?.showDivider || false}
-            onPress={handleProfilePress}
-          />
-        </View>
-        
         {/* Outlet - Área dinâmica onde o conteúdo das rotas é injetado */}
         <View className="flex-1 w-full px-2.5">
           <Outlet />

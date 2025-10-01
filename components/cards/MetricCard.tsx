@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, View } from 'react-native';
 
 interface MetricCardProps {
   icon: string;
@@ -18,96 +18,44 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   cardClass,
   index = 0
 }) => {
-  const getCardStyle = () => {
+  const getCardClasses = () => {
+    const baseClasses = "bg-white rounded-xl p-4 flex-col items-center justify-center";
+    const minHeight = "min-h-[120px]";
+    
     switch (index) {
       case 0:
-        return [styles.metricCard, styles.logisticsCard];
+        return `${baseClasses} ${minHeight} bg-green-50 border-green-200`;
       case 1:
-        return [styles.metricCard, styles.mobileAppCard];
+        return `${baseClasses} ${minHeight} bg-green-50 border-green-300`;
       case 2:
-        return [styles.metricCard, styles.materialLossCard];
+        return `${baseClasses} ${minHeight} bg-gray-50 border-gray-200`;
       default:
-        return styles.metricCard;
+        return `${baseClasses} ${minHeight} border-gray-200`;
     }
   };
 
-  const getIconStyle = () => {
+  const getIconClasses = () => {
+    const baseClasses = "w-10 h-10 rounded-full text-center mb-3 text-lg flex items-center justify-center";
+    
     switch (iconClass) {
       case 'icon-logistics':
-        return [styles.icon, styles.iconLogistics];
+        return `${baseClasses} bg-green-600 text-white`;
       case 'icon-mobile-app':
-        return [styles.icon, styles.iconMobileApp];
+        return `${baseClasses} bg-green-600 text-white`;
       case 'icon-material-loss':
-        return [styles.icon, styles.iconMaterialLoss];
+        return `${baseClasses} bg-gray-500 text-white`;
       default:
-        return styles.icon;
+        return baseClasses;
     }
   };
 
   return (
-    <View style={getCardStyle()}>
-      <Text style={getIconStyle()}>{icon}</Text>
-      <Text style={styles.metricValue}>{value}</Text>
-      <Text style={styles.metricLabel}>{label}</Text>
+    <View className={getCardClasses()}>
+      <View className={getIconClasses()}>
+        <Text className="text-white text-lg">{icon}</Text>
+      </View>
+      <Text className="text-2xl font-bold text-gray-800 mb-1.5">{value}</Text>
+      <Text className="text-xs text-gray-500 font-medium text-center">{label}</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  metricCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 120,
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    textAlign: 'center',
-    lineHeight: 40,
-    marginBottom: 12,
-    fontSize: 18,
-  },
-  iconLogistics: {
-    backgroundColor: '#28a745',
-    color: 'white',
-  },
-  iconMobileApp: {
-    backgroundColor: '#28a745',
-    color: 'white',
-  },
-  iconMaterialLoss: {
-    backgroundColor: '#6c757d',
-    color: 'white',
-  },
-  metricValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: 6,
-  },
-  metricLabel: {
-    fontSize: 11,
-    color: '#6c757d',
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  logisticsCard: {
-    backgroundColor: '#e8f5e8',
-    borderColor: '#d4edda',
-  },
-  mobileAppCard: {
-    backgroundColor: '#e8f5e8',
-    borderColor: '#c3e6cb',
-  },
-  materialLossCard: {
-    backgroundColor: '#f8f9fa',
-    borderColor: '#e9ecef',
-  },
-});

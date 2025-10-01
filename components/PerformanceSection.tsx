@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { CombinedMetricsCard } from './cards/CombinedMetricsCard';
 import { IndividualReturnCard } from './cards/IndividualReturnCard';
 import { ProductivityCard } from './cards/ProductivityCard';
@@ -66,15 +66,17 @@ export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
     }
   };
   return (
-    <View style={styles.performanceContainer}>
-      <Text style={styles.sectionTitle}>Acompanhe aqui sua performance</Text>
+    <View className="px-4">
+      <Text className="text-base font-bold text-gray-800 mb-2.5 text-center mt-2.5">
+        Acompanhe aqui sua performance
+      </Text>
       
-      <View style={styles.topCardsRow}>
-        <View style={styles.productivityContainer}>
+      <View className="flex-row gap-2.5 mb-4">
+        <View style={{ width: '75%' }}>
           <ProductivityCard percentage={productivityPercentage} />
         </View>
         
-        <View style={styles.returnContainer}>
+        <View style={{ width: '23%' }}>
           <IndividualReturnCard percentage={returnPercentage} />
         </View>
       </View>
@@ -83,29 +85,3 @@ export const PerformanceSection: React.FC<PerformanceSectionProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  performanceContainer: {
-    paddingHorizontal: 15,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  topCardsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 15,
-  },
-  productivityContainer: {
-    flex: 0.9,
-  },
-  returnContainer: {
-    flex: 0.3,
-  },
-});

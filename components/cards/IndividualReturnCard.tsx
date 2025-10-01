@@ -8,7 +8,7 @@ interface IndividualReturnCardProps {
 export const IndividualReturnCard: React.FC<IndividualReturnCardProps> = ({ percentage }) => {
   return (
     <View 
-      className="p-4 shadow-lg items-center justify-center w-28 border border-gray-300"
+      className="p-4 shadow-lg items-center justify-center border border-gray-300"
       style={{ backgroundColor: '#80808F', borderRadius: 12, height: 110 }}
     >
       <Text className="text-sm font-semibold text-gray-800 mb-2 text-center">Retorno</Text>

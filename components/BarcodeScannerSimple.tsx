@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  StyleSheet,
   Dimensions,
   ActivityIndicator,
   Alert
@@ -120,8 +119,8 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
   if (!permission) {
     return (
       <Modal visible={visible} animationType="slide">
-        <View style={styles.container}>
-          <Text style={styles.text}>Carregando...</Text>
+        <View className="flex-1 justify-center items-center bg-black p-5">
+          <Text className="text-white text-base text-center my-2.5">Carregando...</Text>
         </View>
       </Modal>
     );
@@ -130,17 +129,17 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
   if (!permission.granted) {
     return (
       <Modal visible={visible} animationType="slide">
-        <View style={styles.container}>
+        <View className="flex-1 justify-center items-center bg-black p-5">
           <Ionicons name="camera-outline" size={80} color="white" />
-          <Text style={styles.title}>Permissão da Câmera</Text>
-          <Text style={styles.text}>
+          <Text className="text-white text-xl font-bold mt-5 mb-2.5">Permissão da Câmera</Text>
+          <Text className="text-white text-base text-center my-2.5">
             Precisamos de acesso à câmera para escanear códigos de barras
           </Text>
-          <TouchableOpacity style={styles.button} onPress={requestPermission}>
-            <Text style={styles.buttonText}>Permitir Câmera</Text>
+          <TouchableOpacity className="bg-blue-500 px-7 py-4 rounded-lg mt-5" onPress={requestPermission}>
+            <Text className="text-white text-base font-bold">Permitir Câmera</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeText}>Fechar</Text>
+          <TouchableOpacity className="mt-4" onPress={onClose}>
+            <Text className="text-gray-400 text-base">Fechar</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -149,19 +148,19 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
 
   return (
     <Modal visible={visible} animationType="slide">
-      <View style={styles.fullScreen}>
+      <View className="flex-1 bg-black">
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onClose} style={styles.closeIcon}>
+        <View className="absolute top-12 left-0 right-0 flex-row justify-between items-center px-5 z-10">
+          <TouchableOpacity onPress={onClose} className="bg-black/50 rounded-full p-2">
             <Ionicons name="close" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Escanear Código de Barras</Text>
+          <Text className="text-white text-lg font-bold">Escanear Código de Barras</Text>
           <View style={{ width: 24 }} />
         </View>
 
         {/* Camera */}
         <CameraView
-          style={styles.camera}
+          className="flex-1"
           facing="back"
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           barcodeScannerSettings={{
@@ -182,21 +181,21 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
           }}
         >
           {/* Overlay */}
-          <View style={styles.overlay}>
-            <View style={styles.scanArea}>
+          <View className="flex-1 justify-center items-center">
+            <View className="w-72 h-28 border-2 border-white rounded-lg bg-transparent relative">
               {/* Loading indicator */}
               {isProcessing && (
-                <View style={styles.loadingOverlay}>
+                <View className="absolute inset-0 bg-black/70 justify-center items-center rounded-lg">
                   <ActivityIndicator size="large" color="#10B981" />
-                  <Text style={styles.loadingText}>Processando...</Text>
+                  <Text className="text-white mt-2.5 text-sm font-medium">Processando...</Text>
                 </View>
               )}
             </View>
           </View>
 
           {/* Instructions */}
-          <View style={styles.instructions}>
-            <Text style={styles.instructionText}>
+          <View className="absolute bottom-24 left-5 right-5">
+            <Text className="text-white text-center text-base bg-black/70 p-4 rounded-lg">
               {isProcessing ? 'Processando código...' : 'Posicione o código de barras na área marcada'}
             </Text>
           </View>
@@ -205,117 +204,3 @@ export const BarcodeScannerSimple: React.FC<BarcodeScannerSimpleProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    padding: 20,
-  },
-  fullScreen: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  header: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    zIndex: 10,
-  },
-  closeIcon: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    borderRadius: 20,
-    padding: 8,
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  camera: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scanArea: {
-    width: 300,
-    height: 120,
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 10,
-    backgroundColor: 'transparent',
-  },
-  instructions: {
-    position: 'absolute',
-    bottom: 100,
-    left: 20,
-    right: 20,
-  },
-  instructionText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    padding: 15,
-    borderRadius: 10,
-  },
-  text: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-    marginVertical: 10,
-  },
-  title: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  closeButton: {
-    marginTop: 15,
-  },
-  closeText: {
-    color: '#999',
-    fontSize: 16,
-  },
-  loadingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  loadingText: {
-    color: 'white',
-    marginTop: 10,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-});

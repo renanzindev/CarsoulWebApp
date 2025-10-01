@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface Notification {
   id: string;
@@ -36,67 +36,21 @@ export const NotificationsSection: React.FC<NotificationsSectionProps> = ({
   };
 
   return (
-    <View style={styles.notifications}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Notificações</Text>
+    <View className="bg-gray-50 border border-gray-300 rounded-xl p-2.5 mt-2.5 mb-0 mx-3.5">
+      <View className="flex-row justify-between items-center mb-1.5">
+        <Text className="text-base font-semibold text-gray-700">Notificações</Text>
         <TouchableOpacity onPress={handleViewAllNotifications}>
-          <Text style={styles.viewAllButton}>Ver todas</Text>
+          <Text className="text-sm text-slate-800 font-medium">Ver todas</Text>
         </TouchableOpacity>
       </View>
       {notifications.map(notification => (
-        <View key={notification.id} style={styles.notificationItem}>
-          <Text style={styles.icon}>
+        <View key={notification.id} className="flex-row items-center mb-2.5">
+          <Text className="w-5 h-5 text-center text-xs leading-5">
             {notification.icon}
           </Text>
-          <Text style={styles.message}>{notification.message}</Text>
+          <Text className="text-sm text-gray-400 flex-1">{notification.message}</Text>
         </View>
       ))}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  notifications: {
-    backgroundColor: '#f8f9fa',
-    borderWidth: 1,
-    borderColor: '#dee2e6',
-    borderRadius: 12,
-    padding: 10,
-    marginTop: 10,
-    marginBottom: 3,
-    marginHorizontal: 14,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: 'rgba(70, 70, 70, 1)',
-  },
-  viewAllButton: {
-    fontSize: 14,
-    color: '#1e293b',
-    fontWeight: '500',
-  },
-  notificationItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  icon: {
-    width: 20,
-    height: 20,
-    textAlign: 'center',
-    fontSize: 12,
-    lineHeight: 20,
-  },
-  message: {
-    fontSize: 14,
-    color: 'rgba(151, 151, 151, 1)',
-    flex: 1,
-  },
-});

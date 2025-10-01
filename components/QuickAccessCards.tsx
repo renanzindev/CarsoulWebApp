@@ -18,12 +18,12 @@ interface QuickAccessCardsProps {
 export const QuickAccessCards: React.FC<QuickAccessCardsProps> = ({
   cards = [
     {
-      id: 'pcp',
-      title: 'PCP',
+      id: 'contacts',
+      title: 'Contatos Úteis',
       subtitle: 'Acessar',
-      icon: '📋',
-      iconClass: 'icon-pcp',
-      notificationCount: 5
+      icon: '📞',
+      iconClass: 'icon-contacts',
+      notificationCount: 0
     },
     {
       id: 'profile',
