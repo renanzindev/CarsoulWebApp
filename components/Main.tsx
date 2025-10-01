@@ -1,4 +1,4 @@
-import { useSegments, useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 
@@ -40,8 +40,8 @@ const Outlet: React.FC = () => {
     return (
       <View className="flex-1 justify-center items-center p-4">
         <View className="text-center">
-          <View className="text-lg font-bold text-gray-800 mb-2">Página não encontrada</View>
-          <View className="text-sm text-gray-600">Rota: {currentRoute}</View>
+          <Text className="text-lg font-bold text-gray-800 mb-2">Página não encontrada</Text>
+          <Text className="text-sm text-gray-600">Rota: {currentRoute}</Text>
         </View>
       </View>
     );
@@ -127,11 +127,11 @@ export const Main: React.FC<MainProps> = ({
       {/* Header fixo - sempre visível no topo */}
       <DashboardHeader />
       
-      {/* Espaçamento reduzido entre header e ProfileCard */}
-      <View className="h-1 bg-gray-100" />
+      {/* Espaçamento mínimo entre header e ProfileCard */}
+      <View className="h-8 bg-gray-100" />
       
       {/* ProfileCard fixo - sempre visível abaixo do header */}
-      <View className="px-2.5 pt-1 pb-0 bg-gray-100">
+      <View className="px-1 pt-1 pb-0 bg-gray-100">
         <ProfileCard 
           userName={profileData?.user?.userName || ''}
           userRole={profileData?.user?.userRole || ''}
@@ -146,11 +146,11 @@ export const Main: React.FC<MainProps> = ({
       {/* Container principal com scroll apenas para o conteúdo dinâmico */}
       <ScrollView 
         className="flex-1 w-full"
-        contentContainerStyle={{ flexGrow: 1, paddingTop: 5, paddingBottom: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 2, paddingBottom: 25 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Outlet - Área dinâmica onde o conteúdo das rotas é injetado */}
-        <View className="flex-1 w-full px-2.5">
+        <View className="flex-1 w-full px-1">
           <Outlet />
         </View>
       </ScrollView>

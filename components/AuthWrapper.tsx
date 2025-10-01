@@ -26,7 +26,11 @@ const AuthContent: React.FC<AuthWrapperProps> = ({ children }) => {
   }
 
   // Se estiver autenticado, mostrar o conteúdo principal
-  return <>{children || <Main />}</>;
+  return (
+    <View style={{ flex: 1 }}>
+      {children || <Main />}
+    </View>
+  );
 };
 
 export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {

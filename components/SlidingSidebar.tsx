@@ -1,16 +1,16 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   Dimensions,
   Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
-const FOOTER_HEIGHT = 80; // Altura da sidebar do footer
+const FOOTER_HEIGHT = 110; // Altura da sidebar do footer - aumentada para mais destaque
 
 interface SlidingSidebarProps {
   children?: React.ReactNode;
@@ -100,8 +100,8 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
         <Image
           source={iconSource}
           style={{
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             tintColor: getTabColor(tabName),
           }}
           resizeMode="contain"
@@ -141,12 +141,12 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
           <View className="flex-1 flex-row justify-around items-center px-4">
             {/* FECHAR OS Tab */}
             <TouchableOpacity
-              className="flex-1 items-center justify-center py-2"
+              className="flex-1 items-center justify-center py-4"
               onPress={() => navigateToPage('FECHAR OS')}
               activeOpacity={0.7}
             >
               <View 
-                className="w-12 h-12 rounded-full justify-center items-center mb-1"
+                className="w-14 h-14 rounded-full justify-center items-center mb-1"
                 style={{
                   backgroundColor: getTabBackgroundColor('FECHAR OS'),
                 }}
@@ -154,7 +154,7 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
                 {renderIcon('FECHAR OS')}
               </View>
               <Text 
-                className={`text-xs font-medium ${
+                className={`text-sm font-medium ${
                   activeTab === 'FECHAR OS' ? 'text-red-600' : 'text-gray-500'
                 }`}
                 style={{ color: getTabColor('FECHAR OS') }}
@@ -165,12 +165,12 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
 
             {/* HOME Tab */}
             <TouchableOpacity
-              className="flex-1 items-center justify-center py-2"
+              className="flex-1 items-center justify-center py-4"
               onPress={() => navigateToPage('HOME')}
               activeOpacity={0.7}
             >
               <View 
-                className="w-12 h-12 rounded-full justify-center items-center mb-1"
+                className="w-14 h-14 rounded-full justify-center items-center mb-1"
                 style={{
                   backgroundColor: getTabBackgroundColor('HOME'),
                 }}
@@ -178,7 +178,7 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
                 {renderIcon('HOME')}
               </View>
               <Text 
-                className={`text-xs font-medium ${
+                className={`text-sm font-medium ${
                   activeTab === 'HOME' ? 'text-green-600' : 'text-gray-500'
                 }`}
                 style={{ color: getTabColor('HOME') }}
@@ -189,12 +189,12 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
 
             {/* PCP Tab */}
             <TouchableOpacity
-              className="flex-1 items-center justify-center py-2"
+              className="flex-1 items-center justify-center py-4"
               onPress={() => navigateToPage('PCP')}
               activeOpacity={0.7}
             >
               <View 
-                className="w-12 h-12 rounded-full justify-center items-center mb-1"
+                className="w-14 h-14 rounded-full justify-center items-center mb-1"
                 style={{
                   backgroundColor: getTabBackgroundColor('PCP'),
                 }}
@@ -202,7 +202,7 @@ export const SlidingSidebar: React.FC<SlidingSidebarProps> = ({
                 {renderIcon('PCP')}
               </View>
               <Text 
-                className={`text-xs font-medium ${
+                className={`text-sm font-medium ${
                   activeTab === 'PCP' ? 'text-blue-600' : 'text-gray-500'
                 }`}
                 style={{ color: getTabColor('PCP') }}

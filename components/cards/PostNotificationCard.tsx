@@ -64,7 +64,6 @@ export const PostNotificationCard: React.FC<PostNotificationCardProps> = ({
               style={styles.iconImage} 
             />
             <Text style={[styles.title, (backgroundImage || backgroundColor) && styles.titleWithBackground]}>{title}</Text>
-            <Text style={[styles.subtitle, (backgroundImage || backgroundColor) && styles.subtitleWithBackground]}> </Text>
           </>
         ) : isPerdaMaterial ? (
           <>
@@ -82,13 +81,11 @@ export const PostNotificationCard: React.FC<PostNotificationCardProps> = ({
               style={styles.iconImage} 
             />
             <Text style={[styles.title, (backgroundImage || backgroundColor) && styles.titleWithBackground]}>{title}</Text>
-            <Text style={[styles.subtitle, (backgroundImage || backgroundColor) && styles.subtitleWithBackground]}> </Text>
           </>
         ) : (
           <>
             <Text style={styles.icon}>{icon}</Text>
             <Text style={[styles.title, backgroundImage && styles.titleWithBackground]}>{title}</Text>
-            <Text style={[styles.subtitle, backgroundImage && styles.subtitleWithBackground]}> </Text>
           </>
         )}
       </View>
